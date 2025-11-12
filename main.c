@@ -6,3 +6,4 @@ int main(int argc, char *argv[])
     printf("test");
     return 0;
 }
+// scemo chi legge 
