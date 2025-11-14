@@ -10,7 +10,7 @@ typedef struct
     int anno_pubblicazione; // (1800<= ap <=2025)
     int numero_copie;
     char genere[31];
-} Libro;
+} libro;
 
 typedef struct
 {
@@ -19,7 +19,7 @@ typedef struct
     char cognome[51];
     char email[81];
     char data_iscrizione[11]; // (formato gg//mm//aaaa)
-} Utente;
+} utente;
 
 typedef struct
 {
@@ -29,7 +29,11 @@ typedef struct
     char data_prestito[11];     // (formato gg//mm//aaaa)
     char data_restituzione[11]; // 30 giorni dopo il prestito
     int restituito;             // restituito=1; mancante=0
-} Prestito;
+} prestito;
+
+
+void inserisci_libro(libro* ptr,int *n);
+
 
 int main()
 {
@@ -48,11 +52,11 @@ int main()
     scanf("%d", &capprestiti);
     printf("Database inizializzato correttamente!\n\n");
 
-    Prestito *ptr_prestiti = (Prestito *)malloc(capprestiti * sizeof(Prestito));
 
-    Utente *ptr_utenti = (Utente *)malloc(caputenti * sizeof(Utente));
+    prestito *ptr_prestiti = (prestito *)malloc(capprestiti * sizeof(prestito));
+    utente *ptr_utenti = (utente *)malloc(caputenti * sizeof(utente));
+    libro *ptr_libri = (libro *)malloc(caplibri * sizeof(libro));
 
-    Libro *ptr_libri = (Libro *)malloc(caplibri * sizeof(Libro));
 
     do
     {
@@ -204,4 +208,17 @@ int main()
     } while (scelta != 20);
 
     return 0;
+}
+
+
+void inserisci_libro(libro *ptr,int* ptr_n){
+    *ptr_n += 1;
+    int j = 0;
+    puts("inserisci i seguenti dati del libro");
+    printf("codice ISBN: ");
+    scanf("%s",(ptr+(*ptr_n))->codice_ISBN);
+    for(int i = 0;i < *ptr_n;i++){
+        
+    }
+
 }
