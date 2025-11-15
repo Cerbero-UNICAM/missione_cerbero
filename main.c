@@ -31,9 +31,7 @@ typedef struct
     int restituito;             // restituito=1; mancante=0
 } prestito;
 
-
-void inserisci_libro(libro* ptr,int *n);
-
+void inserisci_libro(libro *ptr, int *n);
 
 int main()
 {
@@ -52,11 +50,28 @@ int main()
     scanf("%d", &capprestiti);
     printf("Database inizializzato correttamente!\n\n");
 
-
-    prestito *ptr_prestiti = (prestito *)malloc(capprestiti * sizeof(prestito));
-    utente *ptr_utenti = (utente *)malloc(caputenti * sizeof(utente));
     libro *ptr_libri = (libro *)malloc(caplibri * sizeof(libro));
+    if (ptr_libri == NULL)
+    {
+        printf("Errore: memoria insufficiente!\n");
+        return -1;
+    }
 
+    utente *ptr_utenti = (utente *)malloc(caputenti * sizeof(utente));
+    if (ptr_utenti == NULL)
+    {
+        printf("Errore: memoria insufficiente!\n");
+        return -1;
+    }
+
+    // alloco strutture e controllo
+    prestito *ptr_prestiti = (prestito *)malloc(capprestiti * sizeof(prestito));
+    if (ptr_prestiti == NULL)
+    {
+        printf("Errore: memoria insufficiente!\n");
+        return -1;
+    }
+    int conta_prestiti = 0; // contatore lunghezza del vettore prestiti
 
     do
     {
@@ -207,18 +222,22 @@ int main()
 
     } while (scelta != 20);
 
+    // libero memoria
+    free(ptr_prestiti);
+    free(ptr_utenti);
+    free(ptr_libri);
+
     return 0;
 }
 
-
-void inserisci_libro(libro *ptr,int* ptr_n){
+void inserisci_libro(libro *ptr, int *ptr_n)
+{
     *ptr_n += 1;
     int j = 0;
     puts("inserisci i seguenti dati del libro");
     printf("codice ISBN: ");
-    scanf("%s",(ptr+(*ptr_n))->codice_ISBN);
-    for(int i = 0;i < *ptr_n;i++){
-        
+    scanf("%s", (ptr + (*ptr_n))->codice_ISBN);
+    for (int i = 0; i < *ptr_n; i++)
+    {
     }
-
 }
