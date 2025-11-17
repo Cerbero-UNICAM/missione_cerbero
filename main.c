@@ -19,7 +19,7 @@ typedef struct
     char nome[51];
     char cognome[51];
     char email[81];
-    char data_iscrizione[11]; // (formato gg//mm//aaaa)
+    char data_iscrizione[11]; // (formato gg//mm//aaaa) 
 } utente;
 
 typedef struct
@@ -33,6 +33,10 @@ typedef struct
 } prestito;
 
 void inserisci_libro(libro *ptr, int *n);
+
+// 6 - inserisci nuovo utente 
+
+void inserisci_utente(utente *utenti, int * num_utenti_registrati);
 
 int main()
 {
@@ -73,6 +77,7 @@ int main()
         return -1;
     }
     int conta_prestiti = 0; // contatore lunghezza del vettore prestiti
+    int conta_utenti = 0; 
 
     do
     {
@@ -134,9 +139,8 @@ int main()
             // Qui implementerai la visualizzazione libri disponibili
             break;
 
-        case 6:
-            printf("\n--- Inserisci nuovo utente ---\n");
-            // Qui implementerai l'inserimento utente
+        case 6: 
+
             break;
 
         case 7:
@@ -241,4 +245,44 @@ void inserisci_libro(libro *ptr, int *ptr_n)
     for (int i = 0; i < *ptr_n; i++)
     {
     }
+}
+
+void inserisci_utenti(utente *ptr[], int *ptr_num_utenti, int *ptr_capacità) 
+{
+            int  new_codice_utente;
+            char new_nome[51];
+            char new_cognome[51];
+            char new_email[81];
+            char new_data_iscrizione[11];
+            
+            printf("\n--- Inserisci nuovo utente ---\n");
+            printf("Inserire codice utente:");
+            scanf("%d", &new_codice_utente);
+            printf("Inserire nome:");
+            scanf("%s", new_nome);
+            printf("inserisci cognome");
+            scanf("%s", new_cognome);
+            printf("inserisci email");
+            scanf("%s", new_email); 
+            printf("Inserire data di iscrizione (gg/mm/aaaa):");
+            scanf("%s", new_data_iscrizione);
+
+            // gestisco il caso del primo libro: no controlli necessari
+            if ( *ptr_num_utenti==0) 
+            {
+                ptr[*ptr_num_utenti]->codice_utente=new_codice_utente;
+                strcmp(ptr[*ptr_num_utenti]->nome, new_nome); 
+                strcmp(ptr[*ptr_num_utenti]->cognome, new_cognome); 
+                strcmp(ptr[*ptr_num_utenti]->email, new_email); 
+                strcmp(ptr[*ptr_num_utenti]->data_iscrizione, new_data_iscrizione);
+
+                *ptr_num_utenti=1; // per il passo successivo
+            }
+            else 
+            {
+                // controllo che il codice utente sia univoco
+
+                int j=0; 
+
+            }
 }
