@@ -32,11 +32,25 @@ typedef struct
     int restituito;             // restituito=1; mancante=0
 } prestito;
 
-void inserisci_libro(libro *ptr, int *n);
+
+void inserisci_libro(libro *ptr,int* n);
+
 
 int main()
 {
     int scelta;
+    int* ctr_libri;
+    *ctr_libri = 0;
+
+    //Apertura file binario per i libri in lettura scrittura
+  /*FILE *fp_libro;  
+   size_t flag_libro;
+   fp_libro = fopen("libri.bin","r+b");  //controllo apertura file
+        if (fp_libro == NULL){
+            puts("errore apertura file libri");
+            return 1;
+        }*/
+
 
     // Inizializzazione (simulata)
     printf("=== SISTEMA GESTIONE BIBLIOTECA ===\n\n");
@@ -111,7 +125,7 @@ int main()
         {
         case 1:
             printf("\n--- Inserisci nuovo libro ---\n");
-            // Qui implementerai l'inserimento libro
+            inserisci_libro(ptr_libri,ctr_libri);
             break;
 
         case 2:
@@ -231,14 +245,51 @@ int main()
     return 0;
 }
 
-void inserisci_libro(libro *ptr, int *ptr_n)
+void inserisci_libro(libro* ptr,int *n)
 {
-    *ptr_n += 1;
-    int j = 0;
-    puts("inserisci i seguenti dati del libro");
-    printf("codice ISBN: ");
-    scanf("%s", (ptr + (*ptr_n))->codice_ISBN);
-    for (int i = 0; i < *ptr_n; i++)
-    {
+int c;
+int k = *n;
+
+puts("inserisci i seguenti dati del libro");
+
+printf("codice ISBN(XXX-X-XXXX-XXXX-X): ");
+scanf("%s", (ptr+k)->codice_ISBN);
+    while ((c = getchar()) != '\n'); // pulire stdin
+    for (int i = 0; i < k;i++){
+        if(strcmp((ptr+k)->codice_ISBN,(ptr+i)->codice_ISBN) == 0){     //controllo unicità ISBN
+            printf("l ISBN è uguale ad un libro gia esistente,inseriscine un altro");
+            scanf("%s", (ptr+k)->codice_ISBN);
+        }
     }
+
+printf("Titolo: ");
+fgets((ptr+k)->titolo, sizeof((ptr+k)->titolo), stdin);
+(ptr+k)->titolo[strcspn((ptr+k)->titolo, "\n")] = '\0';
+
+printf("autore: ");
+fgets((ptr+k)->autore, sizeof((ptr+k)->autore), stdin);
+(ptr+k)->autore[strcspn((ptr+k)->autore, "\n")] = '\0';
+
+printf("anno di pubblicazione: ");
+scanf("%d",&(ptr+k)->anno_pubblicazione);
+while((ptr+k)->anno_pubblicazione < 1800 || (ptr+k)->anno_pubblicazione > 2025){
+    printf("anno non valido, inserire un anno tra il 1800 e il 2025: ");
+    scanf("%d",&((ptr+k)->anno_pubblicazione));
+}
+while ((c = getchar()) != '\n'); // pulire stdin
+
+printf("numero copie: ");
+scanf("%d",&((ptr+k)->numero_copie));
+while((ptr+k)->numero_copie < 0){
+    printf("numero copie non valido, inserire un numero maggiore di 0: ");
+    scanf("%d",&((ptr+k)->numero_copie));
+}
+while ((c = getchar()) != '\n'); // pulire stdin
+
+printf("genere: ");
+fgets((ptr+k)->genere, sizeof((ptr+k)->genere), stdin);
+(ptr+k)->genere[strcspn((ptr+k)->genere, "\n")] = '\0';
+
+*n += 1;
+
 }
