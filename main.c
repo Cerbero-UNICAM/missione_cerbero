@@ -32,25 +32,26 @@ typedef struct
     int restituito;             // restituito=1; mancante=0
 } prestito;
 
+void inserisci_libro(libro *ptr, int *n);
 
-void inserisci_libro(libro *ptr,int* n);
+// 6 - inserisci nuovo utente
 
+void inserisci_utente(utente *utenti, int *num_utenti_registrati);
 
 int main()
 {
     int scelta;
-    int* ctr_libri;
+    int *ctr_libri;
     *ctr_libri = 0;
 
-    //Apertura file binario per i libri in lettura scrittura
-  /*FILE *fp_libro;  
-   size_t flag_libro;
-   fp_libro = fopen("libri.bin","r+b");  //controllo apertura file
-        if (fp_libro == NULL){
-            puts("errore apertura file libri");
-            return 1;
-        }*/
-
+    // Apertura file binario per i libri in lettura scrittura
+    /*FILE *fp_libro;
+     size_t flag_libro;
+     fp_libro = fopen("libri.bin","r+b");  //controllo apertura file
+          if (fp_libro == NULL){
+              puts("errore apertura file libri");
+              return 1;
+          }*/
 
     // Inizializzazione (simulata)
     printf("=== SISTEMA GESTIONE BIBLIOTECA ===\n\n");
@@ -87,6 +88,7 @@ int main()
         return -1;
     }
     int conta_prestiti = 0; // contatore lunghezza del vettore prestiti
+    int conta_utenti = 0;
 
     do
     {
@@ -125,7 +127,7 @@ int main()
         {
         case 1:
             printf("\n--- Inserisci nuovo libro ---\n");
-            inserisci_libro(ptr_libri,ctr_libri);
+            inserisci_libro(ptr_libri, ctr_libri);
             break;
 
         case 2:
@@ -149,8 +151,7 @@ int main()
             break;
 
         case 6:
-            printf("\n--- Inserisci nuovo utente ---\n");
-            // Qui implementerai l'inserimento utente
+
             break;
 
         case 7:
@@ -245,51 +246,93 @@ int main()
     return 0;
 }
 
-void inserisci_libro(libro* ptr,int *n)
+void inserisci_libro(libro *ptr, int *n)
 {
-int c;
-int k = *n;
+    int c;
+    int k = *n;
 
-puts("inserisci i seguenti dati del libro");
+    puts("inserisci i seguenti dati del libro");
 
-printf("codice ISBN(XXX-X-XXXX-XXXX-X): ");
-scanf("%s", (ptr+k)->codice_ISBN);
+    printf("codice ISBN(XXX-X-XXXX-XXXX-X): ");
+    scanf("%s", (ptr + k)->codice_ISBN);
     while ((c = getchar()) != '\n'); // pulire stdin
-    for (int i = 0; i < k;i++){
-        if(strcmp((ptr+k)->codice_ISBN,(ptr+i)->codice_ISBN) == 0){     //controllo unicità ISBN
+    for (int i = 0; i < k; i++)
+    {
+        if (strcmp((ptr + k)->codice_ISBN, (ptr + i)->codice_ISBN) == 0)
+        { // controllo unicità ISBN
             printf("l ISBN è uguale ad un libro gia esistente,inseriscine un altro");
-            scanf("%s", (ptr+k)->codice_ISBN);
+            scanf("%s", (ptr + k)->codice_ISBN);
         }
     }
 
-printf("Titolo: ");
-fgets((ptr+k)->titolo, sizeof((ptr+k)->titolo), stdin);
-(ptr+k)->titolo[strcspn((ptr+k)->titolo, "\n")] = '\0';
+    printf("Titolo: ");
+    fgets((ptr + k)->titolo, sizeof((ptr + k)->titolo), stdin);
+    (ptr + k)->titolo[strcspn((ptr + k)->titolo, "\n")] = '\0';
 
-printf("autore: ");
-fgets((ptr+k)->autore, sizeof((ptr+k)->autore), stdin);
-(ptr+k)->autore[strcspn((ptr+k)->autore, "\n")] = '\0';
+    printf("autore: ");
+    fgets((ptr + k)->autore, sizeof((ptr + k)->autore), stdin);
+    (ptr + k)->autore[strcspn((ptr + k)->autore, "\n")] = '\0';
 
-printf("anno di pubblicazione: ");
-scanf("%d",&(ptr+k)->anno_pubblicazione);
-while((ptr+k)->anno_pubblicazione < 1800 || (ptr+k)->anno_pubblicazione > 2025){
-    printf("anno non valido, inserire un anno tra il 1800 e il 2025: ");
-    scanf("%d",&((ptr+k)->anno_pubblicazione));
+    printf("anno di pubblicazione: ");
+    scanf("%d", &(ptr + k)->anno_pubblicazione);
+    while ((ptr + k)->anno_pubblicazione < 1800 || (ptr + k)->anno_pubblicazione > 2025)
+    {
+        printf("anno non valido, inserire un anno tra il 1800 e il 2025: ");
+        scanf("%d", &((ptr + k)->anno_pubblicazione));
+    }
+    while ((c = getchar()) != '\n'); // pulire stdin
+
+    printf("numero copie: ");
+    scanf("%d", &((ptr + k)->numero_copie));
+    while ((ptr + k)->numero_copie < 0)
+    {
+        printf("numero copie non valido, inserire un numero maggiore di 0: ");
+        scanf("%d", &((ptr + k)->numero_copie));
+    }
+    while ((c = getchar()) != '\n'); // pulire stdin
+
+    printf("genere: ");
+    fgets((ptr + k)->genere, sizeof((ptr + k)->genere), stdin);
+    (ptr + k)->genere[strcspn((ptr + k)->genere, "\n")] = '\0';
+
+    *n += 1;
 }
-while ((c = getchar()) != '\n'); // pulire stdin
 
-printf("numero copie: ");
-scanf("%d",&((ptr+k)->numero_copie));
-while((ptr+k)->numero_copie < 0){
-    printf("numero copie non valido, inserire un numero maggiore di 0: ");
-    scanf("%d",&((ptr+k)->numero_copie));
-}
-while ((c = getchar()) != '\n'); // pulire stdin
+void inserisci_utenti(utente *ptr[], int *ptr_num_utenti, int *ptr_capacità)
+{
+    int new_codice_utente;
+    char new_nome[51];
+    char new_cognome[51];
+    char new_email[81];
+    char new_data_iscrizione[11];
 
-printf("genere: ");
-fgets((ptr+k)->genere, sizeof((ptr+k)->genere), stdin);
-(ptr+k)->genere[strcspn((ptr+k)->genere, "\n")] = '\0';
+    printf("\n--- Inserisci nuovo utente ---\n");
+    printf("Inserire codice utente:");
+    scanf("%d", &new_codice_utente);
+    printf("Inserire nome:");
+    scanf("%s", new_nome);
+    printf("inserisci cognome");
+    scanf("%s", new_cognome);
+    printf("inserisci email");
+    scanf("%s", new_email);
+    printf("Inserire data di iscrizione (gg/mm/aaaa):");
+    scanf("%s", new_data_iscrizione);
 
-*n += 1;
+    // gestisco il caso del primo libro: no controlli necessari
+    if (*ptr_num_utenti == 0)
+    {
+        ptr[*ptr_num_utenti]->codice_utente = new_codice_utente;
+        strcmp(ptr[*ptr_num_utenti]->nome, new_nome);
+        strcmp(ptr[*ptr_num_utenti]->cognome, new_cognome);
+        strcmp(ptr[*ptr_num_utenti]->email, new_email);
+        strcmp(ptr[*ptr_num_utenti]->data_iscrizione, new_data_iscrizione);
 
+        *ptr_num_utenti = 1; // per il passo successivo
+    }
+    else
+    {
+        // controllo che il codice utente sia univoco
+
+        int j = 0;
+    }
 }
