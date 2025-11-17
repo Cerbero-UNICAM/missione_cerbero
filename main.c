@@ -32,8 +32,9 @@ typedef struct
     int restituito;             // restituito=1; mancante=0
 } prestito;
 
-void inserisci_libro(libro *ptr, int *n);
 
+void inserisci_libro(libro *ptr, int *n);
+void cerca_libro_ISBN(libro *ptr,int *n);
 // 6 - inserisci nuovo utente
 
 void inserisci_utente(utente *utenti, int *num_utenti_registrati);
@@ -137,7 +138,7 @@ int main()
 
         case 3:
             printf("\n--- Cerca libro per ISBN ---\n");
-            // Qui implementerai la ricerca per ISBN
+            cerca_libro_ISBN(ptr_libri, ctr_libri);
             break;
 
         case 4:
@@ -297,6 +298,23 @@ void inserisci_libro(libro *ptr, int *n)
 
     *n += 1;
 }
+
+void cerca_libro_ISBN(libro *ptr,int *n){
+    char temp[18];
+    int k = *n;
+
+    printf("inserisci l ISBN da cercare(XXX-X-XXXX-XXXX-X): ");
+    scanf("%s",temp);
+    for (int i = 0;i < k;i++){
+        if (strcmp(temp, (ptr + i)->codice_ISBN) == 0){  //fai una funzione visulizza libro in modo da avere gia la funzione anche per visualizza libri(basta applicare un for)
+            printf("Titolo: %s\nAutore: %s\nAnno di pubblicazione: %d\nNumero copie: %d\nGenere: %s",(ptr+i)->titolo,(ptr+i)->autore,(ptr+i)->anno_pubblicazione,(ptr+i)->numero_copie,(ptr+i)->genere);
+            return;
+        }
+    }
+    printf("Nessun libro trovato");
+
+}
+
 
 void inserisci_utenti(utente *ptr[], int *ptr_num_utenti, int *ptr_capacità)
 {
