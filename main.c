@@ -176,7 +176,7 @@ int main()
 
         case 11:
             printf("\n--- Visualizza prestiti attivi ---\n");
-            // Qui implementerai la visualizzazione prestiti attivi
+            visualizza_prestiti_attivi(ptr_libri, caplibri, ptr_utenti, conta_utenti, ptr_prestiti, conta_prestiti);
             break;
 
         case 12:
@@ -738,5 +738,78 @@ void registra_restituzione(prestito *ptr_prestiti, int conta_prestiti, libro *pt
 }
 
 // FINE SCELTA 10
+
+// SCELTA 11
+
+// prototipi
+void visualizza_prestiti_attivi(libro *ptr_libri, int caplibri, utente *ptr_utenti, int conta_utenti, prestito *ptr_prestiti, int conta_prestiti);
+
+void salva_titolo(char *ptr_ISBN, libro *ptr_libri, int caplibri, char *titolo);
+void salva_nomeUtente(int cod_utente, utente *ptr_utenti, int conta_utenti, char *nome_utente);
+
+void visualizza_prestiti_attivi(libro *ptr_libri, int caplibri, utente *ptr_utenti, int conta_utenti, prestito *ptr_prestiti, int conta_prestiti)
+{
+    char titolo[101], nome_utente[102]; // nome(50) , spazio , cognome(50) , terminatore
+    int trovati = 0;
+
+    printf("\n");
+    for (int i = 0; i < conta_prestiti; i++) // scorro prestiti
+    {
+        if (!(ptr_prestiti[i].restituito)) // se restituito=0 ...
+        {
+            // salvo titolo e nome_utente corrispondenti
+            salva_titolo(ptr_prestiti[i].codice_ISBN_libro, ptr_libri, caplibri, titolo);
+            salva_nomeUtente(ptr_prestiti[i].codice_utente, ptr_utenti, conta_utenti, nome_utente);
+
+            // Stampa formattata
+            printf("───────────────────────────────────────────────────────────\n");
+            printf("CODICE PRESTITO: %d\n", ptr_prestiti[i].codice_prestito);
+            printf("LIBRO:           %s\n", titolo);
+            printf("UTENTE:          %s\n", nome_utente);
+            printf("DATA PRESTITO:   %s\n", ptr_prestiti[i].data_prestito);
+            printf("RESTITUZIONE:    %s\n", ptr_prestiti[i].data_restituzione);
+            printf("───────────────────────────────────────────────────────────\n\n");
+
+            trovati++; // incremento trovati
+        }
+    }
+
+    if (!trovati)
+    {
+        printf("Nessun prestito attivo trovato.\n");
+    }
+}
+
+void salva_titolo(char *ptr_ISBN, libro *ptr_libri, int caplibri, char *titolo)
+{
+    strcpy(titolo, "Libro non trovato!"); // salvo messaggio di errore
+
+    // cerco libro tramite ISBN
+    for (int i = 0; i < caplibri && ptr_libri[i].codice_ISBN[0] != '\0'; i++) // scorro componenti occupate
+    {
+        if (!strcmp(ptr_ISBN, ptr_libri[i].codice_ISBN)) // se l'ho trovato ...
+        {
+            strcpy(titolo, ptr_libri[i].titolo); // salvo
+            return;
+        }
+    }
+}
+
+void salva_nomeUtente(int cod_utente, utente *ptr_utenti, int conta_utenti, char *nome_utente)
+{
+    strcpy(nome_utente, "Utente non trovato!"); // salvo messaggio di errore
+
+    // cerco utente tramite codice utente
+    for (int i = 0; i < conta_utenti; i++) // scorro componenti occupate
+    {
+        if (cod_utente == ptr_utenti[i].codice_utente) // se l'ho trovato ...
+        {
+            sprintf(nome_utente, "%s %s", ptr_utenti[i].nome, ptr_utenti[i].cognome); // salvo
+            return;
+        }
+    }
+}
+
+// FINE SCELTA 11
 
 // FINE SEZIONE C
