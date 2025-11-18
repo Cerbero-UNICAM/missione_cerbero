@@ -32,9 +32,8 @@ typedef struct
     int restituito;             // restituito=1; mancante=0
 } prestito;
 
-
 void inserisci_libro(libro *ptr, int *n);
-void cerca_libro_ISBN(libro *ptr,int *n);
+void cerca_libro_ISBN(libro *ptr, int *n);
 // 6 - inserisci nuovo utente
 
 void inserisci_utente(utente *utenti, int *num_utenti_registrati);
@@ -172,7 +171,7 @@ int main()
 
         case 10:
             printf("\n--- Registra restituzione libro ---\n");
-            // Qui implementerai la restituzione
+            registra_restituzione(ptr_prestiti, conta_prestiti, ptr_libri, caplibri);
             break;
 
         case 11:
@@ -256,7 +255,8 @@ void inserisci_libro(libro *ptr, int *n)
 
     printf("codice ISBN(XXX-X-XXXX-XXXX-X): ");
     scanf("%s", (ptr + k)->codice_ISBN);
-    while ((c = getchar()) != '\n'); // pulire stdin
+    while ((c = getchar()) != '\n')
+        ; // pulire stdin
     for (int i = 0; i < k; i++)
     {
         if (strcmp((ptr + k)->codice_ISBN, (ptr + i)->codice_ISBN) == 0)
@@ -281,7 +281,8 @@ void inserisci_libro(libro *ptr, int *n)
         printf("anno non valido, inserire un anno tra il 1800 e il 2025: ");
         scanf("%d", &((ptr + k)->anno_pubblicazione));
     }
-    while ((c = getchar()) != '\n'); // pulire stdin
+    while ((c = getchar()) != '\n')
+        ; // pulire stdin
 
     printf("numero copie: ");
     scanf("%d", &((ptr + k)->numero_copie));
@@ -290,7 +291,8 @@ void inserisci_libro(libro *ptr, int *n)
         printf("numero copie non valido, inserire un numero maggiore di 0: ");
         scanf("%d", &((ptr + k)->numero_copie));
     }
-    while ((c = getchar()) != '\n'); // pulire stdin
+    while ((c = getchar()) != '\n')
+        ; // pulire stdin
 
     printf("genere: ");
     fgets((ptr + k)->genere, sizeof((ptr + k)->genere), stdin);
@@ -299,22 +301,23 @@ void inserisci_libro(libro *ptr, int *n)
     *n += 1;
 }
 
-void cerca_libro_ISBN(libro *ptr,int *n){
+void cerca_libro_ISBN(libro *ptr, int *n)
+{
     char temp[18];
     int k = *n;
 
     printf("inserisci l ISBN da cercare(XXX-X-XXXX-XXXX-X): ");
-    scanf("%s",temp);
-    for (int i = 0;i < k;i++){
-        if (strcmp(temp, (ptr + i)->codice_ISBN) == 0){  //fai una funzione visulizza libro in modo da avere gia la funzione anche per visualizza libri(basta applicare un for)
-            printf("Titolo: %s\nAutore: %s\nAnno di pubblicazione: %d\nNumero copie: %d\nGenere: %s",(ptr+i)->titolo,(ptr+i)->autore,(ptr+i)->anno_pubblicazione,(ptr+i)->numero_copie,(ptr+i)->genere);
+    scanf("%s", temp);
+    for (int i = 0; i < k; i++)
+    {
+        if (strcmp(temp, (ptr + i)->codice_ISBN) == 0)
+        { // fai una funzione visulizza libro in modo da avere gia la funzione anche per visualizza libri(basta applicare un for)
+            printf("Titolo: %s\nAutore: %s\nAnno di pubblicazione: %d\nNumero copie: %d\nGenere: %s", (ptr + i)->titolo, (ptr + i)->autore, (ptr + i)->anno_pubblicazione, (ptr + i)->numero_copie, (ptr + i)->genere);
             return;
         }
     }
     printf("Nessun libro trovato");
-
 }
-
 
 void inserisci_utenti(utente *ptr[], int *ptr_num_utenti, int *ptr_capacità)
 {
@@ -355,11 +358,11 @@ void inserisci_utenti(utente *ptr[], int *ptr_num_utenti, int *ptr_capacità)
     }
 }
 
-//SEZIONE C
+// SEZIONE C
 
-//SCELTA 9
+// SCELTA 9
 
-//prototipi
+// prototipi
 void registra_prestito(libro *ptr_libri, int caplibri, utente *ptr_utenti, int conta_utenti, prestito *ptr_prestiti, int *conta_prestiti, int capprestiti);
 
 int input_ISBN(char *ptr_ISBN, libro *ptr_libri, int *ind_libro, int caplibri);
@@ -370,19 +373,18 @@ void input_data(char *ptr_data);
 int is_data(char *ptr_data);
 void calcoladata(char *data);
 
-
 void registra_prestito(libro *ptr_libri, int caplibri, utente *ptr_utenti, int conta_utenti, prestito *ptr_prestiti, int *conta_prestiti, int capprestiti)
 {
-    //controllo capacità
+    // controllo capacità
     if (*conta_prestiti >= capprestiti)
     {
         printf("\nDatabase prestiti pieno, impossibile aggiungere altri prestiti. (%d/%d prestiti)\n", *conta_prestiti, capprestiti);
         return;
     }
-    
+
     char ISBN[18], data[11];
     int utente;
-    
+
     // indici libro e utente
     int ind_libro, ind_utente;
 
@@ -390,30 +392,30 @@ void registra_prestito(libro *ptr_libri, int caplibri, utente *ptr_utenti, int c
     {
         return;
     }
-    
+
     if (!input_utente(&utente, ptr_utenti, &ind_utente, conta_utenti))
     {
         return;
     }
-    
-    //ho trovato libro e utente
-    
+
+    // ho trovato libro e utente
+
     // decremento numero copie
     (ptr_libri[ind_libro].numero_copie)--;
-    
-    //input data prestito
+
+    // input data prestito
     input_data(data);
 
     // inizializzo prestito
-    ptr_prestiti[*conta_prestiti].codice_prestito = (*conta_prestiti);      //inserisco codice prestito
-    strcpy(ptr_prestiti[*conta_prestiti].codice_ISBN_libro , ptr_libri[ind_libro].codice_ISBN); //inserisco ISBN
-    ptr_prestiti[*conta_prestiti].codice_utente = ptr_utenti[ind_utente].codice_utente;         //inserisco codice utente
-    strcpy(ptr_prestiti[*conta_prestiti].data_prestito , data);             //inserisco data prestito
-    calcoladata(data);                                                      //calcolo data restituzione
-    strcpy(ptr_prestiti[*conta_prestiti].data_restituzione , data);         //inserisco data restituzione
-    ptr_prestiti[*conta_prestiti].restituito = 0;                           //imposto restituito=0
-    
-    //stampo feedback
+    ptr_prestiti[*conta_prestiti].codice_prestito = (*conta_prestiti);                         // inserisco codice prestito
+    strcpy(ptr_prestiti[*conta_prestiti].codice_ISBN_libro, ptr_libri[ind_libro].codice_ISBN); // inserisco ISBN
+    ptr_prestiti[*conta_prestiti].codice_utente = ptr_utenti[ind_utente].codice_utente;        // inserisco codice utente
+    strcpy(ptr_prestiti[*conta_prestiti].data_prestito, data);                                 // inserisco data prestito
+    calcoladata(data);                                                                         // calcolo data restituzione
+    strcpy(ptr_prestiti[*conta_prestiti].data_restituzione, data);                             // inserisco data restituzione
+    ptr_prestiti[*conta_prestiti].restituito = 0;                                              // imposto restituito=0
+
+    // stampo feedback
     printf("\n===============================================\n");
     printf("           PRESTITO REGISTRATO\n");
     printf("===============================================\n");
@@ -425,223 +427,242 @@ void registra_prestito(libro *ptr_libri, int caplibri, utente *ptr_utenti, int c
     printf("  Restituzione:%s\n", ptr_prestiti[*conta_prestiti].data_restituzione);
     printf("  Copie rim.:  %d\n", ptr_libri[ind_libro].numero_copie);
     printf("===============================================\n");
-    
-    //incremento contaprestiti
+
+    // incremento contaprestiti
     (*conta_prestiti)++;
 }
 
-//inizio input_ISBN
+// inizio input_ISBN
 int input_ISBN(char *ptr_ISBN, libro *ptr_libri, int *ind_libro, int caplibri)
 {
     printf("\nInserire codice ISBN: ");
-    scanf("%17s",ptr_ISBN);
-    
+    scanf("%17s", ptr_ISBN);
+
     // pulizia buffer
     int c;
-    while ((c = getchar()) != '\n' && c != EOF);
-    
-    //valido input
-    while (!is_ISBN(ptr_ISBN))     //finché non è valido ... continuo a chiedere input
+    while ((c = getchar()) != '\n' && c != EOF)
+        ;
+
+    // valido input
+    while (!is_ISBN(ptr_ISBN)) // finché non è valido ... continuo a chiedere input
     {
         printf("\nISBN non valido! Inserirlo nel formato 'XXX-X-XXXX-XXXX-X':\n");
-        scanf("%17s",ptr_ISBN);
-        
+        scanf("%17s", ptr_ISBN);
+
         // pulizia buffer
-        while ((c = getchar()) != '\n' && c != EOF);
+        while ((c = getchar()) != '\n' && c != EOF)
+            ;
     }
-    
-    //ISBN valido
-    
-    //controllo esistenza copie e ricavo indice
+
+    // ISBN valido
+
+    // controllo esistenza copie e ricavo indice
     return esiste_copia(ptr_ISBN, ptr_libri, ind_libro, caplibri);
 }
 
 int is_ISBN(char *ISBN)
 {
-    //verifico lunghezza
+    // verifico lunghezza
     if (strlen(ISBN) != 17)
     {
         return 0;
     }
-    
+
     // Pattern: XXX-X-XXXX-XXXX-X
     int posizioni_cifre[] = {0, 1, 2, 4, 6, 7, 8, 9, 11, 12, 13, 14, 16};
     int posizioni_trattini[] = {3, 5, 10, 15};
-    
+
     // Verifica che le posizioni siano cifre
-    for (int i = 0; i < 13; i++) {
-        if (!isdigit(ISBN[posizioni_cifre[i]])) {
+    for (int i = 0; i < 13; i++)
+    {
+        if (!isdigit(ISBN[posizioni_cifre[i]]))
+        {
             return 0;
         }
     }
-    
+
     // Verifica che le posizioni siano trattini
-    for (int i = 0; i < 4; i++) {
-        if (ISBN[posizioni_trattini[i]] != '-') {
+    for (int i = 0; i < 4; i++)
+    {
+        if (ISBN[posizioni_trattini[i]] != '-')
+        {
             return 0;
         }
     }
-    
+
     return 1;
 }
 
 int esiste_copia(char *ptr_ISBN, libro *ptr_libri, int *ind_libro, int caplibri)
 {
-    //scorro libri
-    for (int i=0; i < caplibri && ptr_libri[i].codice_ISBN[0] != '\0'; i++)
+    // scorro libri
+    for (int i = 0; i < caplibri && ptr_libri[i].codice_ISBN[0] != '\0'; i++)
     {
-        if (!strcmp(ptr_libri[i].codice_ISBN , ptr_ISBN))   //se trovo ISBN...
+        if (!strcmp(ptr_libri[i].codice_ISBN, ptr_ISBN)) // se trovo ISBN...
         {
-            if (ptr_libri[i].numero_copie > 0)  //se ci sono copie...
+            if (ptr_libri[i].numero_copie > 0) // se ci sono copie...
             {
-                *ind_libro = i;     //salvo indice
-                return 1;   //esiste copia
+                *ind_libro = i; // salvo indice
+                return 1;       // esiste copia
             }
-            else    //se NON ci sono copie...
+            else // se NON ci sono copie...
             {
                 printf("\nNon ci sono copie disponibili!\n");
-                return 0;   //NON ci sono copie
+                return 0; // NON ci sono copie
             }
         }
     }
-    
-    printf("\nL'ISBN non e' registrato");
-    return 0;   //non ho trovato ISBN
-}
-//fine input_ISBN
 
-//inizio input_utente
+    printf("\nL'ISBN non e' registrato");
+    return 0; // non ho trovato ISBN
+}
+// fine input_ISBN
+
+// inizio input_utente
 int input_utente(int *ptr_codUtente, utente *ptr_utenti, int *ind_utente, int conta_utenti)
 {
     printf("\nInserire codice utente: ");
-    
-    //controllo scanf
+
+    // controllo scanf
     if (scanf("%d", ptr_codUtente) != 1)
     {
         printf("Input non valido! Inserire un numero.\n");
         int c;
-        while ((c = getchar()) != '\n' && c != EOF);
+        while ((c = getchar()) != '\n' && c != EOF)
+            ;
         return 0;
     }
-    
+
     // pulizia buffer
     int c;
-    while ((c = getchar()) != '\n' && c != EOF);
-    
-    //cerco utente
-    for (int i=0;i<conta_utenti;i++)    //scorro utenti
+    while ((c = getchar()) != '\n' && c != EOF)
+        ;
+
+    // cerco utente
+    for (int i = 0; i < conta_utenti; i++) // scorro utenti
     {
-        if (ptr_utenti[i].codice_utente == *ptr_codUtente)  //se trovo codice ...
+        if (ptr_utenti[i].codice_utente == *ptr_codUtente) // se trovo codice ...
         {
-            //ho trovato utente
-            *ind_utente = i;    //salvo indice
-            printf("\nUtente trovato!\n");  //stampo feedback
+            // ho trovato utente
+            *ind_utente = i;               // salvo indice
+            printf("\nUtente trovato!\n"); // stampo feedback
             return 1;
         }
     }
-    
-    //NON ho trovato utente
-    printf("\nL'utente non esiste!\n");     //stampo feedback
+
+    // NON ho trovato utente
+    printf("\nL'utente non esiste!\n"); // stampo feedback
     return 0;
 }
-//fine input_utente
+// fine input_utente
 
-//inizio input_data
+// inizio input_data
 void input_data(char *ptr_data)
 {
     printf("\nInserire data del prestito: ");
-    scanf("%10s",ptr_data);
-    
+    scanf("%10s", ptr_data);
+
     // pulizia buffer
     int c;
-    while ((c = getchar()) != '\n' && c != EOF);
-    
-    //valido input
-    while (!is_data(ptr_data))     //finché non è valido ... continuo a chiedere input
+    while ((c = getchar()) != '\n' && c != EOF)
+        ;
+
+    // valido input
+    while (!is_data(ptr_data)) // finché non è valido ... continuo a chiedere input
     {
         printf("\nData non valida! Inserirla nel formato 'gg/mm/aaaa':\n");
-        scanf("%10s",ptr_data);
-        
+        scanf("%10s", ptr_data);
+
         // pulizia buffer
-        while ((c = getchar()) != '\n' && c != EOF);
+        while ((c = getchar()) != '\n' && c != EOF)
+            ;
     }
-    
-    //data valida
+
+    // data valida
 }
 
 int is_data(char *data)
 {
     // Verifica lunghezza
-    if (strlen(data) != 10) return 0;
-    
+    if (strlen(data) != 10)
+        return 0;
+
     // Pattern: gg/mm/aaaa
     int posizioni_cifre[] = {0, 1, 3, 4, 6, 7, 8, 9};
-    
+
     // Verifica che le posizioni siano cifre
-    for (int i = 0; i < 8; i++) {
-        if (!isdigit(data[posizioni_cifre[i]])) {
+    for (int i = 0; i < 8; i++)
+    {
+        if (!isdigit(data[posizioni_cifre[i]]))
+        {
             return 0;
         }
     }
-    
+
     // Verifica che le posizioni siano slash
-    if (data[2] != '/' || data[5] != '/') {
+    if (data[2] != '/' || data[5] != '/')
+    {
         return 0;
     }
-    
+
     // Estrai giorno, mese, anno
     int giorno = (data[0] - '0') * 10 + (data[1] - '0');
     int mese = (data[3] - '0') * 10 + (data[4] - '0');
-    int anno = (data[6] - '0') * 1000 + (data[7] - '0') * 100 + 
+    int anno = (data[6] - '0') * 1000 + (data[7] - '0') * 100 +
                (data[8] - '0') * 10 + (data[9] - '0');
-    
+
     // Validazione logica della data
-    if (mese < 1 || mese > 12) return 0;
-    if (giorno < 1) return 0;
-    
+    if (mese < 1 || mese > 12)
+        return 0;
+    if (giorno < 1)
+        return 0;
+
     // Giorni per mese
     int giorni_mese[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-    
+
     // Aggiusta febbraio per anni bisestili
-    if (mese == 2 && ((anno % 4 == 0) && (anno % 100 != 0 || anno % 400 == 0))) giorni_mese[1] = 29;
-    
+    if (mese == 2 && ((anno % 4 == 0) && (anno % 100 != 0 || anno % 400 == 0)))
+        giorni_mese[1] = 29;
+
     // Controllo giorno massimo
-    if (giorno > giorni_mese[mese - 1]) return 0;
-    
+    if (giorno > giorni_mese[mese - 1])
+        return 0;
+
     return 1;
 }
-//fine input_data
+// fine input_data
 
-//inizio calcoladata
+// inizio calcoladata
 void calcoladata(char *data)
 {
     // Estrai giorno, mese, anno
     int giorno = (data[0] - '0') * 10 + (data[1] - '0');
     int mese = (data[3] - '0') * 10 + (data[4] - '0');
-    int anno = (data[6] - '0') * 1000 + (data[7] - '0') * 100 + 
+    int anno = (data[6] - '0') * 1000 + (data[7] - '0') * 100 +
                (data[8] - '0') * 10 + (data[9] - '0');
-               
+
     // Giorni per mese
     int giorni_mese[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-    
+
     // Aggiusta febbraio per anni bisestili
-    if (mese == 2 && ((anno % 4 == 0) && (anno % 100 != 0 || anno % 400 == 0))) giorni_mese[1] = 29;
-    
-    //aggiungo 30 gg
+    if (mese == 2 && ((anno % 4 == 0) && (anno % 100 != 0 || anno % 400 == 0)))
+        giorni_mese[1] = 29;
+
+    // aggiungo 30 gg
     giorno += 30;
-    
+
     // aggiusto data
-    while (giorno > giorni_mese[mese - 1])      //finché ho troppi giorni per il mese corrente...
+    while (giorno > giorni_mese[mese - 1]) // finché ho troppi giorni per il mese corrente...
     {
-        giorno -= giorni_mese[mese - 1];        //gli sottraggo i giorni del mese corrente
-        mese++;                                 //e passo al mese successivo
-        
-        if (mese > 12)      //se poi sforo i mesi dell'anno ...
+        giorno -= giorni_mese[mese - 1]; // gli sottraggo i giorni del mese corrente
+        mese++;                          // e passo al mese successivo
+
+        if (mese > 12) // se poi sforo i mesi dell'anno ...
         {
-            mese = 1;       //torno a gennaio
-            anno++;         //e passo all'anno successivo
+            mese = 1; // torno a gennaio
+            anno++;   // e passo all'anno successivo
         }
-        
+
         // ricalcolo i giorni di febbraio a seconda che l'anno corrente sia bisestile oppure no
         giorni_mese[1] = 28;
         if (mese == 2 && (anno % 4 == 0) && (anno % 100 != 0 || anno % 400 == 0))
@@ -649,14 +670,73 @@ void calcoladata(char *data)
             giorni_mese[1] = 29;
         }
     }
-    
-    //sostituisco stringa data
+
+    // sostituisco stringa data
     char output[11];
     sprintf(output, "%02d/%02d/%04d", giorno, mese, anno);
-    strcpy(data , output);
+    strcpy(data, output);
 }
-//fine calcoladata
+// fine calcoladata
 
-//FINE SCELTA 9
+// FINE SCELTA 9
 
-//FINE SEZIONE C
+// SCELTA 10
+
+// prototipo
+void registra_restituzione(prestito *ptr_prestiti, int conta_prestiti, libro *ptr_libri, int caplibri);
+
+void registra_restituzione(prestito *ptr_prestiti, int conta_prestiti, libro *ptr_libri, int caplibri)
+{
+    // input codice
+    int cod;
+    printf("Inserire codice prestito: ");
+    scanf("%d", &cod);
+
+    // pulizia buffer
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF)
+        ;
+
+    // verifico esistenza
+    if (0 <= cod && cod < conta_prestiti) // se prestito esiste ...
+    {
+        if (ptr_prestiti[cod].restituito) // se già restituito ...
+        {
+            printf("\nIl prestito e' gia' stato restituito!\n");
+        }
+        else // non ancora restituito ...
+        {
+            // cerco ISBN corrispondente
+            int flag = 0;
+            for (int i = 0; i < caplibri && ptr_libri[i].codice_ISBN[0] != '\0'; i++) // scorro componenti occupate
+            {
+                if (!strcmp(ptr_prestiti[cod].codice_ISBN_libro, ptr_libri[i].codice_ISBN)) // se l'ho trovato ...
+                {
+                    (ptr_libri[i].numero_copie)++;    // incremento numero copie
+                    ptr_prestiti[cod].restituito = 1; // segno restituito
+
+                    flag = 1; // ho trovato il libro
+                    break;    // e smetto di scorrere
+                }
+            }
+
+            // controllo riuscita della ricerca
+            if (flag) // se riuscito ...
+            {
+                printf("\nRestituzione effettuata con successo!\n");
+            }
+            else // se NON riuscito ...
+            {
+                printf("\nErrore! Non c'e' un ISBN corrispondente a quello del prestito.\n");
+            }
+        }
+    }
+    else // se il prestito non esiste ...
+    {
+        printf("\nIl prestito non esiste!\n");
+    }
+}
+
+// FINE SCELTA 10
+
+// FINE SEZIONE C
