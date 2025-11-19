@@ -34,7 +34,9 @@ typedef struct
 
 
 void inserisci_libro(libro *ptr, int *n);
-void cerca_libro_ISBN(libro *ptr,int *n);
+void stampa_libro(libro *ptr,int i);
+void cerca_libro_ISBN(libro *ptr,int k);
+void stampa_lista_libri(libro* ptr,int n);
 // 6 - inserisci nuovo utente
 
 void inserisci_utente(utente *utenti, int *num_utenti_registrati);
@@ -133,12 +135,12 @@ int main()
 
         case 2:
             printf("\n--- Visualizza tutti i libri ---\n");
-            // Qui implementerai la visualizzazione libri
+            stampa_lista_libri(ptr_libri,*ctr_libri);
             break;
 
         case 3:
             printf("\n--- Cerca libro per ISBN ---\n");
-            cerca_libro_ISBN(ptr_libri, ctr_libri);
+            cerca_libro_ISBN(ptr_libri,ctr_libri);
             break;
 
         case 4:
@@ -299,15 +301,21 @@ void inserisci_libro(libro *ptr, int *n)
     *n += 1;
 }
 
-void cerca_libro_ISBN(libro *ptr,int *n){
+
+void stampa_libro(libro *ptr,int i){
+    printf("%s\t%s\t%d\t%d\t%s\n",(ptr+i)->titolo,(ptr+i)->autore,(ptr+i)->anno_pubblicazione,(ptr+i)->numero_copie,(ptr+i)->genere);
+}
+
+
+void cerca_libro_ISBN(libro *ptr,int k){
     char temp[18];
-    int k = *n;
 
     printf("inserisci l ISBN da cercare(XXX-X-XXXX-XXXX-X): ");
     scanf("%s",temp);
     for (int i = 0;i < k;i++){
-        if (strcmp(temp, (ptr + i)->codice_ISBN) == 0){  //fai una funzione visulizza libro in modo da avere gia la funzione anche per visualizza libri(basta applicare un for)
-            printf("Titolo: %s\nAutore: %s\nAnno di pubblicazione: %d\nNumero copie: %d\nGenere: %s",(ptr+i)->titolo,(ptr+i)->autore,(ptr+i)->anno_pubblicazione,(ptr+i)->numero_copie,(ptr+i)->genere);
+        if (strcmp(temp, (ptr + i)->codice_ISBN) == 0){  
+            puts("Codice ISBN\tTitolo\tAutore\tAnno di pubblicazione\tNumero copie\tGenere");
+            stampa_libro(ptr,i);
             return;
         }
     }
@@ -315,6 +323,13 @@ void cerca_libro_ISBN(libro *ptr,int *n){
 
 }
 
+
+void stampa_lista_libri(libro* ptr,int n){
+    puts("Codice ISBN\tTitolo\tAutore\tAnno di pubblicazione\tNumero copie\tGenere");
+    for(int i = 0;i < n;i++){
+        stampa_libro(ptr,i);
+    }
+}
 
 void inserisci_utenti(utente *ptr[], int *ptr_num_utenti, int *ptr_capacità)
 {
