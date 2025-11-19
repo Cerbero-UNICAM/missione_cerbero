@@ -156,7 +156,7 @@ int main()
 
         case 7:
             printf("\n--- Visualizza tutti gli utenti ---\n");
-            
+
             break;
 
         case 8:
@@ -181,7 +181,7 @@ int main()
 
         case 12:
             printf("\n--- Visualizza storico prestiti utente ---\n");
-            // Qui implementerai lo storico prestiti
+            visualizza_storico_utente(ptr_libri, caplibri, ptr_utenti, conta_utenti, ptr_prestiti, conta_prestiti);
             break;
 
         case 13:
@@ -246,9 +246,6 @@ int main()
     return 0;
 }
 
-
-
-
 void inserisci_libro(libro *ptr, int *n)
 {
     int c;
@@ -304,7 +301,6 @@ void inserisci_libro(libro *ptr, int *n)
     *n += 1;
 }
 
-
 void cerca_libro_ISBN(libro *ptr, int *n)
 {
     char temp[18];
@@ -323,7 +319,7 @@ void cerca_libro_ISBN(libro *ptr, int *n)
     printf("Nessun libro trovato");
 }
 
-//Sezione B
+// Sezione B
 
 // 6 - Inserisci nuovo utente
 void inserisci_utenti(utente *ptr[], int *ptr_num_utenti, int *ptr_capacità)
@@ -334,7 +330,7 @@ void inserisci_utenti(utente *ptr[], int *ptr_num_utenti, int *ptr_capacità)
     char new_email[81];
     char new_data_iscrizione[11];
 
-    // inserisco controlli sulla lunghezza massima dell'input tramite scanf 
+    // inserisco controlli sulla lunghezza massima dell'input tramite scanf
     printf("\n--- Inserisci nuovo utente ---\n");
     printf("Inserire codice utente:");
     scanf("%d", &new_codice_utente);
@@ -347,54 +343,50 @@ void inserisci_utenti(utente *ptr[], int *ptr_num_utenti, int *ptr_capacità)
     printf("Inserire data di iscrizione (gg/mm/aaaa):");
     scanf("%10s", new_data_iscrizione);
 
-    
-        if (*ptr_num_utenti>=*ptr_capacità){
-            printf("Errore: impossibile registrare nuovo utente! Capacità massima raggiunta!\n"); 
-            return;
-        }
-        // controllo che il codice utente sia univoco
+    if (*ptr_num_utenti >= *ptr_capacità)
+    {
+        printf("Errore: impossibile registrare nuovo utente! Capacità massima raggiunta!\n");
+        return;
+    }
+    // controllo che il codice utente sia univoco
 
-        int codice_valido = 0;
+    int codice_valido = 0;
 
-        while (!codice_valido)
-         {
+    while (!codice_valido)
+    {
 
-            codice_valido=1; // assume che il codice sia valido 
+        codice_valido = 1; // assume che il codice sia valido
 
-            for(int j=0; j<*ptr_num_utenti; j++) 
+        for (int j = 0; j < *ptr_num_utenti; j++)
+        {
+            if (ptr[j]->codice_utente == new_codice_utente)
             {
-                if (ptr[j]->codice_utente==new_codice_utente)
-                {
-                    printf("Il codice utente inserito è già stato utilizzato!\nInserirne uno diverso:\n");
-                    scanf("%d", &new_codice_utente); // modifica il valore del codice utente
-                    codice_valido=0; 
-                    break; // esce solo dal for 
-                }
+                printf("Il codice utente inserito è già stato utilizzato!\nInserirne uno diverso:\n");
+                scanf("%d", &new_codice_utente); // modifica il valore del codice utente
+                codice_valido = 0;
+                break; // esce solo dal for
             }
-            
         }
+    }
 
-        // se supera il controllo, allora posso registrare il nuovo titolo
+    // se supera il controllo, allora posso registrare il nuovo titolo
 
-         ptr[*ptr_num_utenti]->codice_utente = new_codice_utente;
-        strcpy(ptr[*ptr_num_utenti]->nome, new_nome);
-        strcpy(ptr[*ptr_num_utenti]->cognome, new_cognome);
-        strcpy(ptr[*ptr_num_utenti]->email, new_email);
-        strcpy(ptr[*ptr_num_utenti]->data_iscrizione, new_data_iscrizione);
+    ptr[*ptr_num_utenti]->codice_utente = new_codice_utente;
+    strcpy(ptr[*ptr_num_utenti]->nome, new_nome);
+    strcpy(ptr[*ptr_num_utenti]->cognome, new_cognome);
+    strcpy(ptr[*ptr_num_utenti]->email, new_email);
+    strcpy(ptr[*ptr_num_utenti]->data_iscrizione, new_data_iscrizione);
 
-        *ptr_num_utenti += 1; // aggiorno contatore per la chiamata successiva
+    *ptr_num_utenti += 1; // aggiorno contatore per la chiamata successiva
 
-        printf("Registrazione del nuovo utente avvenuta con successo!\n");
-
-
-    
+    printf("Registrazione del nuovo utente avvenuta con successo!\n");
 }
 
 // 7 - Visualizza utenti
 
-void visualizza_utenti(utente *ptr[], int numero_utenti) 
+void visualizza_utenti(utente *ptr[], int numero_utenti)
 {
-    if(numero_utenti==0)
+    if (numero_utenti == 0)
     {
         printf("Non ci sono utenti registrati!\n");
         return;
@@ -402,7 +394,7 @@ void visualizza_utenti(utente *ptr[], int numero_utenti)
     else
     {
         printf("%-15s %-50s %-50s %-80s %-20s\n", "Codice utente", "Nome", "Cognome", "Email", "Data di iscrizione");
-        for(int i=0; i<numero_utenti; i++)
+        for (int i = 0; i < numero_utenti; i++)
         {
             printf("%d %-50s %-50s %-80s %-10s\n", ptr[i]->codice_utente, ptr[i]->nome, ptr[i]->cognome, ptr[i]->email, ptr[i]->data_iscrizione);
             printf("\n");
@@ -414,25 +406,24 @@ void visualizza_utenti(utente *ptr[], int numero_utenti)
 
 void cerca_utente(utente *ptr[], int numero_utenti)
 {
-    int codice_ricerca; 
-    int trovato=0; // se vi è corrispondenza con un codice utente registrato trovato=1; altrimento trovato=0
+    int codice_ricerca;
+    int trovato = 0; // se vi è corrispondenza con un codice utente registrato trovato=1; altrimento trovato=0
     printf("Inserire il codice utente da cercare:");
     scanf("%d", &codice_ricerca);
 
-
-    for(int i=0; i<numero_utenti; i++) 
+    for (int i = 0; i < numero_utenti; i++)
     {
-        if(ptr[i]->codice_utente==codice_ricerca) 
+        if (ptr[i]->codice_utente == codice_ricerca)
         {
             printf("%-15s %-50s %-50s %-80s %-20s\n", "Codice utente", "Nome", "Cognome", "Email", "Data di iscrizione");
             printf("%d %-50s %-50s %-80s %-10s\n", ptr[i]->codice_utente, ptr[i]->nome, ptr[i]->cognome, ptr[i]->email, ptr[i]->data_iscrizione);
-            trovato=1; // confermo la corrispondenza, dunque aggiorno valore trovato
+            trovato = 1; // confermo la corrispondenza, dunque aggiorno valore trovato
             break;
         }
-
     }
 
-    if (trovato==0){
+    if (trovato == 0)
+    {
         printf("Il codice utente %d non è associato ad alcun utente registrato!\n", codice_ricerca);
     }
 }
@@ -890,5 +881,94 @@ void salva_nomeUtente(int cod_utente, utente *ptr_utenti, int conta_utenti, char
 }
 
 // FINE SCELTA 11
+
+// SCELTA 12
+
+void visualizza_storico_utente(libro *ptr_libri, int caplibri, utente *ptr_utenti, int conta_utenti, prestito *ptr_prestiti, int conta_prestiti);
+
+int esiste_utente(int cod, utente *ptr_utenti, int conta_utenti);
+int stampa_storico_utente(int cod, libro *ptr_libri, int caplibri, utente *ptr_utenti, int conta_utenti, prestito *ptr_prestiti, int conta_prestiti);
+
+void visualizza_storico_utente(libro *ptr_libri, int caplibri, utente *ptr_utenti, int conta_utenti, prestito *ptr_prestiti, int conta_prestiti)
+{
+    // chiedo codice utente
+    int cod;
+    printf("\nInserire codice utente: ");
+    scanf("%d", &cod);
+
+    // pulizia buffer
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF)
+        ;
+
+    if (!esiste_utente(cod, ptr_utenti, conta_utenti)) // se NON ho trovato l'utente ...
+    {
+        printf("\nL'utente non esiste!\n");
+        return;
+    }
+
+    // ho trovato l'utente
+    printf("\nUtente trovato con successo!\n");
+
+    if (!stampa_storico_utente(cod, ptr_libri, caplibri, ptr_utenti, conta_utenti, ptr_prestiti, conta_prestiti))
+    {
+        printf("\nL'utente non ha prestiti registrati a suo nome!\n");
+    }
+}
+
+int esiste_utente(int cod, utente *ptr_utenti, int conta_utenti)
+{
+    // cerco utente tramite codice utente (ind attualmente)
+    for (int i = 0; i < conta_utenti; i++)
+    {
+        if (cod == ptr_utenti[i].codice_utente) // se l'ho trovato ...
+        {
+            return 1; // ho trovato l'utente
+        }
+    }
+    return 0; // NON ho trovato l'utente
+}
+
+int stampa_storico_utente(int cod, libro *ptr_libri, int caplibri, utente *ptr_utenti, int conta_utenti, prestito *ptr_prestiti, int conta_prestiti)
+{
+    int trovati = 0;
+    char titolo[101], nome_utente[102]; // nome(50) , spazio , cognome(50) , terminatore
+
+    printf("\n");
+    for (int i = 0; i < conta_prestiti; i++) // scorro prestiti
+    {
+        if (cod == ptr_prestiti[i].codice_utente) // se il prestito è dell'utente ...
+        {
+            // salvo titolo e nome_utente corrispondenti
+            salva_titolo(ptr_prestiti[i].codice_ISBN_libro, ptr_libri, caplibri, titolo);
+            salva_nomeUtente(ptr_prestiti[i].codice_utente, ptr_utenti, conta_utenti, nome_utente);
+
+            // Stampa formattata in stile Scelta 11
+            printf("───────────────────────────────────────────────────────────\n");
+            printf("CODICE PRESTITO: %d\n", ptr_prestiti[i].codice_prestito);
+            printf("LIBRO:           %s\n", titolo);
+            printf("UTENTE:          %s\n", nome_utente);
+            printf("DATA PRESTITO:   %s\n", ptr_prestiti[i].data_prestito);
+            printf("RESTITUZIONE:    %s\n", ptr_prestiti[i].data_restituzione);
+
+            // Indicatore stato prestito (richiesto dalle specifiche)
+            if (ptr_prestiti[i].restituito)
+            {
+                printf("STATO:          RESTITUITO\n");
+            }
+            else
+            {
+                printf("STATO:          IN PRESTITO\n");
+            }
+            printf("───────────────────────────────────────────────────────────\n\n");
+
+            trovati++; // incremento trovati
+        }
+    }
+
+    return trovati;
+}
+
+// FINE SCELTA 12
 
 // FINE SEZIONE C
