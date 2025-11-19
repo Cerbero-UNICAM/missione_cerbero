@@ -32,15 +32,10 @@ typedef struct
     int restituito;             // restituito=1; mancante=0
 } prestito;
 
-
 void inserisci_libro(libro *ptr, int *n);
-void stampa_libro(libro *ptr,int i);
-void cerca_libro_ISBN(libro *ptr,int k);
-void stampa_lista_libri(libro* ptr,int n);
-
+void cerca_libro_ISBN(libro *ptr, int *n);
 // 6 - inserisci nuovo utente
-
-void inserisci_utente(utente *utenti, int *num_utenti_registrati);
+void inserisci_utente(utente *ptr, int *ptr_num_utenti, int *ptr_capacità);
 
 int main()
 {
@@ -136,12 +131,12 @@ int main()
 
         case 2:
             printf("\n--- Visualizza tutti i libri ---\n");
-            stampa_lista_libri(ptr_libri,*ctr_libri);
+            // Qui implementerai la visualizzazione libri
             break;
 
         case 3:
             printf("\n--- Cerca libro per ISBN ---\n");
-            cerca_libro_ISBN(ptr_libri,ctr_libri);
+            cerca_libro_ISBN(ptr_libri, ctr_libri);
             break;
 
         case 4:
@@ -309,18 +304,18 @@ void inserisci_libro(libro *ptr, int *n)
 }
 
 
-void stampa_libro(libro *ptr,int i){
-    printf("%s\t%s\t%d\t%d\t%s\n",(ptr+i)->titolo,(ptr+i)->autore,(ptr+i)->anno_pubblicazione,(ptr+i)->numero_copie,(ptr+i)->genere);
-}
-
-void cerca_libro_ISBN(libro *ptr, int k){
+void cerca_libro_ISBN(libro *ptr, int *n)
+{
     char temp[18];
+    int k = *n;
+
     printf("inserisci l ISBN da cercare(XXX-X-XXXX-XXXX-X): ");
-    scanf("%s",temp);
-    for (int i = 0;i < k;i++){
-        if (strcmp(temp, (ptr + i)->codice_ISBN) == 0){  
-            puts("Codice ISBN\tTitolo\tAutore\tAnno di pubblicazione\tNumero copie\tGenere");
-            stampa_libro(ptr,i);
+    scanf("%s", temp);
+    for (int i = 0; i < k; i++)
+    {
+        if (strcmp(temp, (ptr + i)->codice_ISBN) == 0)
+        { // fai una funzione visulizza libro in modo da avere gia la funzione anche per visualizza libri(basta applicare un for)
+            printf("Titolo: %s\nAutore: %s\nAnno di pubblicazione: %d\nNumero copie: %d\nGenere: %s", (ptr + i)->titolo, (ptr + i)->autore, (ptr + i)->anno_pubblicazione, (ptr + i)->numero_copie, (ptr + i)->genere);
             return;
         }
     }
@@ -329,15 +324,8 @@ void cerca_libro_ISBN(libro *ptr, int k){
 
 //Sezione B
 
-void stampa_lista_libri(libro* ptr,int n){
-    puts("Codice ISBN\tTitolo\tAutore\tAnno di pubblicazione\tNumero copie\tGenere");
-    for(int i = 0;i < n;i++){
-        stampa_libro(ptr,i);
-    }
-}
-
 // 6 - Inserisci nuovo utente
-void inserisci_utenti(utente *ptr[], int *ptr_num_utenti, int *ptr_capacità)
+void inserisci_utente(utente *ptr, int *ptr_num_utenti, int *ptr_capacità)
 {
     int new_codice_utente;
     char new_nome[51];
@@ -374,7 +362,7 @@ void inserisci_utenti(utente *ptr[], int *ptr_num_utenti, int *ptr_capacità)
 
             for(int j=0; j<*ptr_num_utenti; j++) 
             {
-                if (ptr[j]->codice_utente==new_codice_utente)
+                if (ptr[j].codice_utente==new_codice_utente)
                 {
                     printf("Il codice utente inserito è già stato utilizzato!\nInserirne uno diverso:\n");
                     scanf("%d", &new_codice_utente); // modifica il valore del codice utente
@@ -387,11 +375,11 @@ void inserisci_utenti(utente *ptr[], int *ptr_num_utenti, int *ptr_capacità)
 
         // se supera il controllo, allora posso registrare il nuovo titolo
 
-         ptr[*ptr_num_utenti]->codice_utente = new_codice_utente;
-        strcpy(ptr[*ptr_num_utenti]->nome, new_nome);
-        strcpy(ptr[*ptr_num_utenti]->cognome, new_cognome);
-        strcpy(ptr[*ptr_num_utenti]->email, new_email);
-        strcpy(ptr[*ptr_num_utenti]->data_iscrizione, new_data_iscrizione);
+         ptr[*ptr_num_utenti].codice_utente = new_codice_utente;
+        strcpy(ptr[*ptr_num_utenti].nome, new_nome);
+        strcpy(ptr[*ptr_num_utenti].cognome, new_cognome);
+        strcpy(ptr[*ptr_num_utenti].email, new_email);
+        strcpy(ptr[*ptr_num_utenti].data_iscrizione, new_data_iscrizione);
 
         *ptr_num_utenti += 1; // aggiorno contatore per la chiamata successiva
 
@@ -403,7 +391,7 @@ void inserisci_utenti(utente *ptr[], int *ptr_num_utenti, int *ptr_capacità)
 
 // 7 - Visualizza utenti
 
-void visualizza_utenti(utente *ptr[], int numero_utenti) 
+void visualizza_utenti(utente *ptr, int numero_utenti) 
 {
     if(numero_utenti==0)
     {
@@ -415,7 +403,7 @@ void visualizza_utenti(utente *ptr[], int numero_utenti)
         printf("%-15s %-50s %-50s %-80s %-20s\n", "Codice utente", "Nome", "Cognome", "Email", "Data di iscrizione");
         for(int i=0; i<numero_utenti; i++)
         {
-            printf("%d %-50s %-50s %-80s %-10s\n", ptr[i]->codice_utente, ptr[i]->nome, ptr[i]->cognome, ptr[i]->email, ptr[i]->data_iscrizione);
+            printf("%d %-50s %-50s %-80s %-10s\n", ptr[i].codice_utente, ptr[i].nome, ptr[i].cognome, ptr[i].email, ptr[i].data_iscrizione);
             printf("\n");
         }
     }
@@ -423,7 +411,7 @@ void visualizza_utenti(utente *ptr[], int numero_utenti)
 
 // 8 - Ricerca tramite codice utente
 
-void cerca_utente(utente *ptr[], int numero_utenti)
+void cerca_utente(utente *ptr, int numero_utenti)
 {
     int codice_ricerca; 
     int trovato=0; // se vi è corrispondenza con un codice utente registrato trovato=1; altrimento trovato=0
@@ -433,10 +421,10 @@ void cerca_utente(utente *ptr[], int numero_utenti)
 
     for(int i=0; i<numero_utenti; i++) 
     {
-        if(ptr[i]->codice_utente==codice_ricerca) 
+        if(ptr[i].codice_utente==codice_ricerca) 
         {
             printf("%-15s %-50s %-50s %-80s %-20s\n", "Codice utente", "Nome", "Cognome", "Email", "Data di iscrizione");
-            printf("%d %-50s %-50s %-80s %-10s\n", ptr[i]->codice_utente, ptr[i]->nome, ptr[i]->cognome, ptr[i]->email, ptr[i]->data_iscrizione);
+            printf("%d %-50s %-50s %-80s %-10s\n", ptr[i].codice_utente, ptr[i].nome, ptr[i].cognome, ptr[i].email, ptr[i].data_iscrizione);
             trovato=1; // confermo la corrispondenza, dunque aggiorno valore trovato
             break;
         }
@@ -903,3 +891,88 @@ void salva_nomeUtente(int cod_utente, utente *ptr_utenti, int conta_utenti, char
 // FINE SCELTA 11
 
 // FINE SEZIONE C
+
+// SEZIONE D 
+
+// 13 - STATISTICHE GENERALI
+
+// funzione che mi serve per identificare libro più cercato in accordo con lo storico prestisti
+
+libro* libro_più_prestato(int numero_libri, int numero_prestiti, prestito *ptr_prestiti, libro *ptr_libri)
+{
+    if (numero_libri == 0 || numero_prestiti == 0)
+    {
+        return NULL; //gestisco i casi in cui gli array sono vuoti
+    }
+    int indice_libro; // variabile che traccia indice del libro più prestato 
+    int numero_volte_prestato; // variabile dove registro il numero di prestiti del libro più prestato
+    int temp; // variabile temporanea per memorizzare n volte libro della corrente iterazione è stato prestato
+
+    indice_libro = 0; // inzializzo indice del + prestato al primo elemento di libri
+    numero_volte_prestato = 0; // inizializzo numero di prestiti del + prestato a zero
+
+    for(int i=0; i<numero_libri; i++)
+    {
+        temp=0; // ad ogni iterata riazzero la variabile temporanea
+
+        for(int j=0; j<numero_prestiti; j++)
+        {
+            if(strcmp(ptr_libri[i].codice_ISBN, ptr_prestiti[j].codice_ISBN_libro)==0) 
+            {
+                // se vi è corrispondenza tra libro i-esimo e il libro del prestito j-esimo
+                temp += 1; 
+            }
+        }
+
+        if (temp > numero_volte_prestato)
+        {
+        numero_volte_prestato=temp; 
+        indice_libro = i; 
+        }
+    }
+
+    return &ptr_libri[indice_libro];
+
+}
+
+void statistiche_generali(int numero_libri, int numero_utenti, int numero_prestiti, prestito *ptr_prestiti, libro *ptr_libri)
+{
+    printf("Il numero totale di libri nel catalogo è pari a: %d\n", numero_libri); 
+
+    int numero_copie = 0; // inizializzo numero di copie a zero
+
+    int prestiti_attivi = 0; // variabile per memorizzare numero prestiti attivi
+
+    for (int i=0; i<numero_libri; i++)
+    {
+        numero_copie += ptr_libri[i].numero_copie; // per ogni libro aggiungo alla somma il numero delle copie associato
+    }
+    printf("Il numero totale di copie disponibili è pari a: %d\n", numero_copie);
+    
+    printf("Il numero totale di utenti registrati è pari a: %d\n", numero_utenti);
+
+    printf("Il numero totale di prestiti effettuati è pari a: %d\n", numero_prestiti); 
+
+    for(int j=0; j<numero_prestiti; j++) 
+    {
+        if(ptr_prestiti[j].restituito==0) // se il libro del j-esimo prestito non è ancora stato restituito allora incremento il contatore 
+        {
+            prestiti_attivi += 1; 
+        }
+    }
+
+    printf("Il numero di prestiti attivi è pari a: %d\n", prestiti_attivi);
+
+    libro * libro_prestato = libro_più_prestato (numero_libri, numero_prestiti, ptr_prestiti, ptr_libri);
+
+    if (libro_prestato == NULL)
+    {
+        printf("Non vi sono libri prestati nel sistema!\n");
+    }
+    else 
+    {
+         printf("Il libro più prestato è: %s di %s\n", libro_prestato->titolo, libro_prestato->autore);
+
+    }
+
+}
