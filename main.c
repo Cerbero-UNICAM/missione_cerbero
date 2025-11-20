@@ -1099,7 +1099,7 @@ void libri_più_prestati(libro *ptr_libri, int numero_libri, prestito *ptr_prest
         printf("il %d libro più prestato è: %s di %s\n", j+1, ptr_libri[temp].titolo, ptr_libri[temp].autore);
         printf("prestato: %d volte\n", num_prestiti_per_libro[temp]);
         printf("posizione: %d libro registrato\n", temp); 
-        num_prestiti_per_libro[temp] = 0; // annullo il valore in modo che alla prossima iterazione indice_max restituisca l'indice dell'elemento più prestato tolti quelli delle prime j iterazioni        
+        num_prestiti_per_libro[temp] = -1; // annullo il valore in modo che alla prossima iterazione indice_max restituisca l'indice dell'elemento più prestato tolti quelli delle prime j iterazioni        
     }
 
     free(num_prestiti_per_libro);
