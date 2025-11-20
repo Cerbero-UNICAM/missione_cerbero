@@ -10,7 +10,7 @@ typedef struct
     char autore[51];
     int anno_pubblicazione; // (1800<= ap <=2025)
     int numero_copie;
-    char genere[31];
+    char genere[31]; // (Possibili campi: Classico; Fantasy; Giallo; Fantascientifico; Saggio; Romanzo)
 } libro;
 
 typedef struct
@@ -976,3 +976,137 @@ void statistiche_generali(int numero_libri, int numero_utenti, int numero_presti
     }
 
 }
+
+// 14 - Libri per genere 
+
+char* stringa_maiuscolo(char *str) {
+    for(int i = 0; str[i] != '\0'; i++) {
+        str[i] = toupper(str[i]);
+    }
+
+    return str;
+}
+
+void conteggio_libri(libro *ptr_libri, int numero_libri)
+{
+    int contatori[6] = {0}; // 1) classico 2) fantasy 3) giallo 4) fantascienza 5) romanzo 6) saggio // inizializzato a zero
+    char *generi[]={"CLASSICO", "FANTASY", "GIALLO", "FANTASCIENZA", "ROMANZO", "SAGGIO"};
+
+    if(numero_libri==0)
+    {
+        printf("Non vi sono libri registrati!\n");
+        return;
+    }
+
+    
+    // primo ciclo per scorrere sui libri presenti 
+    for(int i=0; i<numero_libri; i++)
+    {
+        // secondo ciclo per confrontare genere libro corrente con i generi ammissibili
+        for(int j=0; j<6; j++)
+        {
+            if(strcmp(stringa_maiuscolo(ptr_libri[i].genere),generi[j])==0)
+            {
+                contatori[j] += 1;  // aggiorno il contatore del j-genere dato che c'è corrispondenza tra vettore contatori e generi
+                break; // una volta trovato il genere posso uscire dal ciclo più interno
+            }
+        }
+    }
+
+    // stampo i risultati
+    for (int i=0; i<6; i++)
+    {
+        printf("Numero di %s: %d\n", generi[i], contatori[i]);
+    }
+}
+
+// 15 - Visualizza 5 libri più prestati
+
+int n_volte_libro_prestato(libro *ptr_libro, prestito *ptr_prestiti, int numero_prestiti)
+{
+    if (numero_prestiti==0)
+    {
+        printf("Non sono stati effettuati prestiti!\n");
+        return 0; 
+    }
+
+    int volte_prestito = 0; // variabile che memorizza numero volte che il libro in input è stato prestato
+
+    for(int i=0; i<numero_prestiti; i++)
+    {
+        if(strcmp(ptr_libro->codice_ISBN,ptr_prestiti[i].codice_ISBN_libro) == 0)
+        {
+            volte_prestito ++; // incremento il numero di prestiti di 1 se vi è corrispondenza tra gli ISBN
+        }
+    }
+
+    return volte_prestito;
+
+
+
+}
+
+int indice_max (int *ptr, int numero_elementi)
+// funzioni che dato un vettore di interi restituisce l'indice all'interno del vettore dell'elemento di valore maggiore
+{
+    int pos = 0; // indice dell'elemento massimo che inizializzo a zero
+    int max = ptr[0]; // variabile dove memorizzo valore massimo; la inizializzo al primo elemento
+
+    for (int i = 1; i < numero_elementi; i ++)
+    {
+        if (ptr[i] > max )
+        {
+            max = ptr[i];
+            pos = i; // registra posizione del corrente valore massimo 
+        }
+    }
+
+    return pos; 
+
+}
+
+void libri_più_prestati(libro *ptr_libri, int numero_libri, prestito *ptr_prestiti, int numero_prestiti)
+{
+
+    if (numero_prestiti == 0 || numero_libri == 0)
+    {
+        printf("Non vi sono libri registrati o prestiti effettuati!\n");
+        return;
+    }
+
+    int* num_prestiti_per_libro = (int*) malloc(numero_libri*sizeof(int)); // array in cui all'i-esimo posto corrisponde il numero di voltre che libri[i] è stato prestato in accordo con lo storico
+
+    if (num_prestiti_per_libro == NULL)
+    {
+        printf("Errore allocazione memoria!\n");
+        return;
+    }
+
+    // ciclo per memorizzare numero volte che ciascu
+    for(int i=0; i<numero_libri; i++)
+    {
+        num_prestiti_per_libro[i] = n_volte_libro_prestato((ptr_libri + i), ptr_prestiti, numero_prestiti); // num_prestiti_per_libro[i] = numero di volte che è stato prestato libri[i]
+
+    }
+
+    // Restano da gestire casi numeri_libri < 5 e numeri_prestiti < 5 
+
+    // dato che voglio sapere i 5 libri più prestati, ciclo da 1 a 5 
+    int temp;
+    for(int j=0; j<5; j++)
+    {
+        temp = indice_max(num_prestiti_per_libro, numero_libri); 
+        printf("il %d libro più prestato è: %s di %s\n", j+1, ptr_libri[temp].titolo, ptr_libri[temp].autore);
+        printf("prestato: %d volte\n", num_prestiti_per_libro[temp]);
+        printf("posizione: %d libro registrato\n", temp); 
+        num_prestiti_per_libro[temp] = -1; // annullo il valore in modo che alla prossima iterazione indice_max restituisca l'indice dell'elemento più prestato tolti quelli delle prime j iterazioni        
+    }
+
+    free(num_prestiti_per_libro);
+
+
+}
+
+// aggiungere chiamate ai case nel main 
+
+// FINE SEZIONE D 
