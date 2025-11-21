@@ -1093,7 +1093,6 @@ void libri_più_prestati(libro *ptr_libri, int numero_libri, prestito *ptr_prest
 
     // dato che voglio sapere i 5 libri più prestati, ciclo da 1 a 5 
     int temp;
-    int flag = 0; // flag = 0 se vi sono 5 libri prestati caiscuno un numero di volte strettamente positvo; flag = 1 se invece vi sono meno di 5 libri prestati ciascuno un numero di volte maggiore o uguale a 1
     for(int j=0; j<5; j++)
     {
         temp = indice_max(num_prestiti_per_libro, numero_libri); 
@@ -1101,7 +1100,6 @@ void libri_più_prestati(libro *ptr_libri, int numero_libri, prestito *ptr_prest
         if (num_prestiti_per_libro[temp] == 0) // gestisco caso 
         {
             // non ha senso continuare a stampare se il numero di volte che è stato prestato il (j+1)-esimo libro più richiesto è pari a zero; dunque mi fermo 
-            flag = 1; // aggiorno valore della variabile flag perchè vuol dire che in assoluto sono stati prestati meno di 5 titoli 
             printf("Sono stati prestati solo %d in totale!\n", j); 
             break; // esce dal ciclo perchè tanto so che se continuassi con il ciclo otterei solo numeri di prestiti pari a zero
         } 
