@@ -36,10 +36,10 @@ void inserisci_libro(libro *ptr, int *n);
 void cerca_libro_ISBN(libro *ptr, int *n);
 // 6 - inserisci nuovo utente
 void inserisci_utente(utente *ptr, int *ptr_num_utenti, int *ptr_capacità);
-void registra_prestito(libro *ptr_libri, int caplibri, utente *ptr_utenti, int conta_utenti, prestito *ptr_prestiti, int *conta_prestiti, int capprestiti);
-void registra_restituzione(prestito *ptr_prestiti, int conta_prestiti, libro *ptr_libri, int caplibri);
-void visualizza_prestiti_attivi(libro *ptr_libri, int caplibri, utente *ptr_utenti, int conta_utenti, prestito *ptr_prestiti, int conta_prestiti);
-void visualizza_storico_utente(libro *ptr_libri, int caplibri, utente *ptr_utenti, int conta_utenti, prestito *ptr_prestiti, int conta_prestiti);
+void registra_prestito(libro *ptr_libri, int conta_libri, utente *ptr_utenti, int conta_utenti, prestito *ptr_prestiti, int *conta_prestiti, int capprestiti);
+void registra_restituzione(prestito *ptr_prestiti, int conta_prestiti, libro *ptr_libri, int conta_libri);
+void visualizza_prestiti_attivi(libro *ptr_libri, int conta_libri, utente *ptr_utenti, int conta_utenti, prestito *ptr_prestiti, int conta_prestiti);
+void visualizza_storico_utente(libro *ptr_libri, int conta_libri, utente *ptr_utenti, int conta_utenti, prestito *ptr_prestiti, int conta_prestiti);
 
 int main()
 {
@@ -169,22 +169,22 @@ int main()
 
         case 9:
             printf("\n--- Registra nuovo prestito ---\n");
-            registra_prestito(ptr_libri, caplibri, ptr_utenti, conta_utenti, ptr_prestiti, &conta_prestiti, capprestiti);
+            registra_prestito(ptr_libri, *ctr_libri, ptr_utenti, conta_utenti, ptr_prestiti, &conta_prestiti, capprestiti);
             break;
 
         case 10:
             printf("\n--- Registra restituzione libro ---\n");
-            registra_restituzione(ptr_prestiti, conta_prestiti, ptr_libri, caplibri);
+            registra_restituzione(ptr_prestiti, conta_prestiti, ptr_libri, *ctr_libri);
             break;
 
         case 11:
             printf("\n--- Visualizza prestiti attivi ---\n");
-            visualizza_prestiti_attivi(ptr_libri, caplibri, ptr_utenti, conta_utenti, ptr_prestiti, conta_prestiti);
+            visualizza_prestiti_attivi(ptr_libri, *ctr_libri, ptr_utenti, conta_utenti, ptr_prestiti, conta_prestiti);
             break;
 
         case 12:
             printf("\n--- Visualizza storico prestiti utente ---\n");
-            visualizza_storico_utente(ptr_libri, caplibri, ptr_utenti, conta_utenti, ptr_prestiti, conta_prestiti);
+            visualizza_storico_utente(ptr_libri, *ctr_libri, ptr_utenti, conta_utenti, ptr_prestiti, conta_prestiti);
             break;
 
         case 13:
@@ -437,15 +437,15 @@ void cerca_utente(utente *ptr, int numero_utenti)
 
 // prototipi
 
-int input_ISBN(char *ptr_ISBN, libro *ptr_libri, int *ind_libro, int caplibri);
+int input_ISBN(char *ptr_ISBN, libro *ptr_libri, int *ind_libro, int conta_libri);
 int is_ISBN(char ISBN[]);
-int esiste_copia(char ISBN[], libro *ptr_libri, int *ind_libro, int caplibri);
+int esiste_copia(char ISBN[], libro *ptr_libri, int *ind_libro, int conta_libri);
 int input_utente(int *ptr_codUtente, utente *ptr_utenti, int *ind_utente, int conta_utenti);
 void input_data(char *ptr_data);
 int is_data(char *ptr_data);
 void calcoladata(char *data);
 
-void registra_prestito(libro *ptr_libri, int caplibri, utente *ptr_utenti, int conta_utenti, prestito *ptr_prestiti, int *conta_prestiti, int capprestiti)
+void registra_prestito(libro *ptr_libri, int conta_libri, utente *ptr_utenti, int conta_utenti, prestito *ptr_prestiti, int *conta_prestiti, int capprestiti)
 {
     // controllo capacità
     if (*conta_prestiti >= capprestiti)
@@ -460,7 +460,7 @@ void registra_prestito(libro *ptr_libri, int caplibri, utente *ptr_utenti, int c
     // indici libro e utente
     int ind_libro, ind_utente;
 
-    if (!input_ISBN(ISBN, ptr_libri, &ind_libro, caplibri))
+    if (!input_ISBN(ISBN, ptr_libri, &ind_libro, conta_libri))
     {
         return;
     }
@@ -505,7 +505,7 @@ void registra_prestito(libro *ptr_libri, int caplibri, utente *ptr_utenti, int c
 }
 
 // inizio input_ISBN
-int input_ISBN(char *ptr_ISBN, libro *ptr_libri, int *ind_libro, int caplibri)
+int input_ISBN(char *ptr_ISBN, libro *ptr_libri, int *ind_libro, int conta_libri)
 {
     printf("\nInserire codice ISBN: ");
     scanf("%17s", ptr_ISBN);
@@ -529,7 +529,7 @@ int input_ISBN(char *ptr_ISBN, libro *ptr_libri, int *ind_libro, int caplibri)
     // ISBN valido
 
     // controllo esistenza copie e ricavo indice
-    return esiste_copia(ptr_ISBN, ptr_libri, ind_libro, caplibri);
+    return esiste_copia(ptr_ISBN, ptr_libri, ind_libro, conta_libri);
 }
 
 int is_ISBN(char *ISBN)
@@ -565,10 +565,10 @@ int is_ISBN(char *ISBN)
     return 1;
 }
 
-int esiste_copia(char *ptr_ISBN, libro *ptr_libri, int *ind_libro, int caplibri)
+int esiste_copia(char *ptr_ISBN, libro *ptr_libri, int *ind_libro, int conta_libri)
 {
     // scorro libri
-    for (int i = 0; i < caplibri && ptr_libri[i].codice_ISBN[0] != '\0'; i++)
+    for (int i = 0; i < conta_libri; i++)
     {
         if (!strcmp(ptr_libri[i].codice_ISBN, ptr_ISBN)) // se trovo ISBN...
         {
@@ -754,7 +754,7 @@ void calcoladata(char *data)
 
 // SCELTA 10
 
-void registra_restituzione(prestito *ptr_prestiti, int conta_prestiti, libro *ptr_libri, int caplibri)
+void registra_restituzione(prestito *ptr_prestiti, int conta_prestiti, libro *ptr_libri, int conta_libri)
 {
     // input codice
     int cod;
@@ -777,7 +777,7 @@ void registra_restituzione(prestito *ptr_prestiti, int conta_prestiti, libro *pt
         {
             // cerco ISBN corrispondente
             int flag = 0;
-            for (int i = 0; i < caplibri && ptr_libri[i].codice_ISBN[0] != '\0'; i++) // scorro componenti occupate
+            for (int i = 0; i < conta_libri; i++) // scorro componenti occupate
             {
                 if (!strcmp(ptr_prestiti[cod].codice_ISBN_libro, ptr_libri[i].codice_ISBN)) // se l'ho trovato ...
                 {
@@ -811,10 +811,10 @@ void registra_restituzione(prestito *ptr_prestiti, int conta_prestiti, libro *pt
 // SCELTA 11
 
 // prototipi
-void salva_titolo(char *ptr_ISBN, libro *ptr_libri, int caplibri, char *titolo);
+void salva_titolo(char *ptr_ISBN, libro *ptr_libri, int conta_libri, char *titolo);
 void salva_nomeUtente(int cod_utente, utente *ptr_utenti, int conta_utenti, char *nome_utente);
 
-void visualizza_prestiti_attivi(libro *ptr_libri, int caplibri, utente *ptr_utenti, int conta_utenti, prestito *ptr_prestiti, int conta_prestiti)
+void visualizza_prestiti_attivi(libro *ptr_libri, int conta_libri, utente *ptr_utenti, int conta_utenti, prestito *ptr_prestiti, int conta_prestiti)
 {
     char titolo[101], nome_utente[102]; // nome(50) , spazio , cognome(50) , terminatore
     int trovati = 0;
@@ -825,7 +825,7 @@ void visualizza_prestiti_attivi(libro *ptr_libri, int caplibri, utente *ptr_uten
         if (!(ptr_prestiti[i].restituito)) // se restituito=0 ...
         {
             // salvo titolo e nome_utente corrispondenti
-            salva_titolo(ptr_prestiti[i].codice_ISBN_libro, ptr_libri, caplibri, titolo);
+            salva_titolo(ptr_prestiti[i].codice_ISBN_libro, ptr_libri, conta_libri, titolo);
             salva_nomeUtente(ptr_prestiti[i].codice_utente, ptr_utenti, conta_utenti, nome_utente);
 
             // Stampa formattata
@@ -847,12 +847,12 @@ void visualizza_prestiti_attivi(libro *ptr_libri, int caplibri, utente *ptr_uten
     }
 }
 
-void salva_titolo(char *ptr_ISBN, libro *ptr_libri, int caplibri, char *titolo)
+void salva_titolo(char *ptr_ISBN, libro *ptr_libri, int conta_libri, char *titolo)
 {
     strcpy(titolo, "Libro non trovato!"); // salvo messaggio di errore
 
     // cerco libro tramite ISBN
-    for (int i = 0; i < caplibri && ptr_libri[i].codice_ISBN[0] != '\0'; i++) // scorro componenti occupate
+    for (int i = 0; i < conta_libri; i++) // scorro componenti occupate
     {
         if (!strcmp(ptr_ISBN, ptr_libri[i].codice_ISBN)) // se l'ho trovato ...
         {
@@ -883,9 +883,9 @@ void salva_nomeUtente(int cod_utente, utente *ptr_utenti, int conta_utenti, char
 
 // prototipi
 int esiste_utente(int cod, utente *ptr_utenti, int conta_utenti);
-int stampa_storico_utente(int cod, libro *ptr_libri, int caplibri, utente *ptr_utenti, int conta_utenti, prestito *ptr_prestiti, int conta_prestiti);
+int stampa_storico_utente(int cod, libro *ptr_libri, int conta_libri, utente *ptr_utenti, int conta_utenti, prestito *ptr_prestiti, int conta_prestiti);
 
-void visualizza_storico_utente(libro *ptr_libri, int caplibri, utente *ptr_utenti, int conta_utenti, prestito *ptr_prestiti, int conta_prestiti)
+void visualizza_storico_utente(libro *ptr_libri, int conta_libri, utente *ptr_utenti, int conta_utenti, prestito *ptr_prestiti, int conta_prestiti)
 {
     // chiedo codice utente
     int cod;
@@ -906,7 +906,7 @@ void visualizza_storico_utente(libro *ptr_libri, int caplibri, utente *ptr_utent
     // ho trovato l'utente
     printf("\nUtente trovato con successo!\n");
 
-    if (!stampa_storico_utente(cod, ptr_libri, caplibri, ptr_utenti, conta_utenti, ptr_prestiti, conta_prestiti))
+    if (!stampa_storico_utente(cod, ptr_libri, conta_libri, ptr_utenti, conta_utenti, ptr_prestiti, conta_prestiti))
     {
         printf("\nL'utente non ha prestiti registrati a suo nome!\n");
     }
@@ -925,7 +925,7 @@ int esiste_utente(int cod, utente *ptr_utenti, int conta_utenti)
     return 0; // NON ho trovato l'utente
 }
 
-int stampa_storico_utente(int cod, libro *ptr_libri, int caplibri, utente *ptr_utenti, int conta_utenti, prestito *ptr_prestiti, int conta_prestiti)
+int stampa_storico_utente(int cod, libro *ptr_libri, int conta_libri, utente *ptr_utenti, int conta_utenti, prestito *ptr_prestiti, int conta_prestiti)
 {
     int trovati = 0;
     char titolo[101], nome_utente[102]; // nome(50) , spazio , cognome(50) , terminatore
@@ -936,7 +936,7 @@ int stampa_storico_utente(int cod, libro *ptr_libri, int caplibri, utente *ptr_u
         if (cod == ptr_prestiti[i].codice_utente) // se il prestito è dell'utente ...
         {
             // salvo titolo e nome_utente corrispondenti
-            salva_titolo(ptr_prestiti[i].codice_ISBN_libro, ptr_libri, caplibri, titolo);
+            salva_titolo(ptr_prestiti[i].codice_ISBN_libro, ptr_libri, conta_libri, titolo);
             salva_nomeUtente(ptr_prestiti[i].codice_utente, ptr_utenti, conta_utenti, nome_utente);
 
             // Stampa formattata in stile Scelta 11
