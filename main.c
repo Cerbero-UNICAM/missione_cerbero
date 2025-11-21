@@ -37,6 +37,10 @@ void cerca_libro_ISBN(libro *ptr, int *n);
 // 6 - inserisci nuovo utente
 void inserisci_utente(utente *ptr, int *ptr_num_utenti, int *ptr_capacità);
 
+void registra_prestito(libro *ptr_libri, int caplibri, utente *ptr_utenti, int conta_utenti, prestito *ptr_prestiti, int *conta_prestiti, int capprestiti);
+void registra_restituzione(prestito *ptr_prestiti, int conta_prestiti, libro *ptr_libri, int caplibri);
+void visualizza_prestiti_attivi(libro *ptr_libri, int caplibri, utente *ptr_utenti, int conta_utenti, prestito *ptr_prestiti, int conta_prestiti);
+
 int main()
 {
     int scelta;
@@ -441,7 +445,6 @@ void cerca_utente(utente *ptr, int numero_utenti)
 // SCELTA 9
 
 // prototipi
-void registra_prestito(libro *ptr_libri, int caplibri, utente *ptr_utenti, int conta_utenti, prestito *ptr_prestiti, int *conta_prestiti, int capprestiti);
 
 int input_ISBN(char *ptr_ISBN, libro *ptr_libri, int *ind_libro, int caplibri);
 int is_ISBN(char ISBN[]);
@@ -760,9 +763,6 @@ void calcoladata(char *data)
 
 // SCELTA 10
 
-// prototipo
-void registra_restituzione(prestito *ptr_prestiti, int conta_prestiti, libro *ptr_libri, int caplibri);
-
 void registra_restituzione(prestito *ptr_prestiti, int conta_prestiti, libro *ptr_libri, int caplibri)
 {
     // input codice
@@ -820,8 +820,6 @@ void registra_restituzione(prestito *ptr_prestiti, int conta_prestiti, libro *pt
 // SCELTA 11
 
 // prototipi
-void visualizza_prestiti_attivi(libro *ptr_libri, int caplibri, utente *ptr_utenti, int conta_utenti, prestito *ptr_prestiti, int conta_prestiti);
-
 void salva_titolo(char *ptr_ISBN, libro *ptr_libri, int caplibri, char *titolo);
 void salva_nomeUtente(int cod_utente, utente *ptr_utenti, int conta_utenti, char *nome_utente);
 
