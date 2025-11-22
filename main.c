@@ -159,12 +159,12 @@ int main()
 
         case 7:
             printf("\n--- Visualizza tutti gli utenti ---\n");
-
+            visualizza_utenti(ptr_utenti, conta_utenti);
             break;
 
         case 8:
             printf("\n--- Cerca utente per codice ---\n");
-            // Qui implementerai la ricerca utente
+            cerca_utente(ptr_utenti, conta_utenti); 
             break;
 
         case 9:
