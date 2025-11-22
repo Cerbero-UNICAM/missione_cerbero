@@ -10,7 +10,7 @@ typedef struct
     char autore[51];
     int anno_pubblicazione; // (1800<= ap <=2025)
     int numero_copie;
-    char genere[31]; // (Possibili campi: Classico; Fantasy; Giallo; Fantascientifico; Saggio; Romanzo)
+    char genere[31]; // (Possibili campi: Classico; Fantasy; Giallo; Fantascienza; Saggio; Romanzo)
 } libro;
 
 typedef struct
@@ -36,6 +36,15 @@ void inserisci_libro(libro *ptr, int *n);
 void cerca_libro_ISBN(libro *ptr, int *n);
 // 6 - inserisci nuovo utente
 void inserisci_utente(utente *ptr, int *ptr_num_utenti, int *ptr_capacità);
+void visualizza_utenti(utente *ptr, int numero_utenti);
+void cerca_utente(utente *ptr, int numero_utenti);
+int input_ISBN(char *ptr_ISBN, libro *ptr_libri, int *ind_libro, int conta_libri);
+int is_ISBN(char ISBN[]);
+int esiste_copia(char ISBN[], libro *ptr_libri, int *ind_libro, int conta_libri);
+int input_utente(int *ptr_codUtente, utente *ptr_utenti, int *ind_utente, int conta_utenti);
+void input_data(char *ptr_data);
+int is_data(char *ptr_data);
+void calcoladata(char *data);
 void registra_prestito(libro *ptr_libri, int conta_libri, utente *ptr_utenti, int conta_utenti, prestito *ptr_prestiti, int *conta_prestiti, int capprestiti);
 void registra_restituzione(prestito *ptr_prestiti, int conta_prestiti, libro *ptr_libri, int conta_libri);
 void visualizza_prestiti_attivi(libro *ptr_libri, int conta_libri, utente *ptr_utenti, int conta_utenti, prestito *ptr_prestiti, int conta_prestiti);
@@ -249,6 +258,8 @@ int main()
     return 0;
 }
 
+// 1 inserisci nuovo libro
+
 void inserisci_libro(libro *ptr, int *n)
 {
     int c;
@@ -353,12 +364,12 @@ void inserisci_utente(utente *ptr, int *ptr_num_utenti, int *ptr_capacità)
     }
     // controllo che il codice utente sia univoco
 
-    int codice_valido = 0;
+    int codice_valido = 0; // 0 se codice va verificato e 1 se codice supera il controllo
 
     while (!codice_valido)
     {
 
-        codice_valido = 1; // assume che il codice sia valido
+        codice_valido = 1; // assume che il codice utente sia valido
 
         for (int j = 0; j < *ptr_num_utenti; j++)
         {
@@ -366,7 +377,7 @@ void inserisci_utente(utente *ptr, int *ptr_num_utenti, int *ptr_capacità)
             {
                 printf("Il codice utente inserito è già stato utilizzato!\nInserirne uno diverso:\n");
                 scanf("%d", &new_codice_utente); // modifica il valore del codice utente
-                codice_valido = 0;
+                codice_valido = 0; // modifico valore perchè devo rientrare nel ciclo al fine di verificare che il nuovo codice appena inserito sia valido
                 break; // esce solo dal for
             }
         }
@@ -380,7 +391,7 @@ void inserisci_utente(utente *ptr, int *ptr_num_utenti, int *ptr_capacità)
     strcpy(ptr[*ptr_num_utenti].email, new_email);
     strcpy(ptr[*ptr_num_utenti].data_iscrizione, new_data_iscrizione);
 
-    *ptr_num_utenti += 1; // aggiorno contatore per la chiamata successiva
+    *ptr_num_utenti += 1; // aggiorno contatore utenti per la chiamata successiva
 
     printf("Registrazione del nuovo utente avvenuta con successo!\n");
 }
@@ -431,19 +442,11 @@ void cerca_utente(utente *ptr, int numero_utenti)
     }
 }
 
+// FINE SEZIONE B
+
 // SEZIONE C
 
 // SCELTA 9
-
-// prototipi
-
-int input_ISBN(char *ptr_ISBN, libro *ptr_libri, int *ind_libro, int conta_libri);
-int is_ISBN(char ISBN[]);
-int esiste_copia(char ISBN[], libro *ptr_libri, int *ind_libro, int conta_libri);
-int input_utente(int *ptr_codUtente, utente *ptr_utenti, int *ind_utente, int conta_utenti);
-void input_data(char *ptr_data);
-int is_data(char *ptr_data);
-void calcoladata(char *data);
 
 void registra_prestito(libro *ptr_libri, int conta_libri, utente *ptr_utenti, int conta_utenti, prestito *ptr_prestiti, int *conta_prestiti, int capprestiti)
 {
@@ -983,7 +986,7 @@ libro *libro_più_prestato(int numero_libri, int numero_prestiti, prestito *ptr_
     }
     int indice_libro;          // variabile che traccia indice del libro più prestato
     int numero_volte_prestato; // variabile dove registro il numero di prestiti del libro più prestato
-    int temp;                  // variabile temporanea per memorizzare n volte libro della corrente iterazione è stato prestato
+    int temp;                  // variabile temporanea per memorizzare quante volte libro della corrente iterazione è stato prestato
 
     indice_libro = 0;          // inzializzo indice del + prestato al primo elemento di libri
     numero_volte_prestato = 0; // inizializzo numero di prestiti del + prestato a zero
@@ -1065,7 +1068,7 @@ char *stringa_maiuscolo(char *str)
 
 void conteggio_libri(libro *ptr_libri, int numero_libri)
 {
-    int contatori[6] = {0}; // 1) classico 2) fantasy 3) giallo 4) fantascienza 5) romanzo 6) saggio // inizializzato a zero
+    int contatori[6] = {0}; // 1) classico 2) fantasy 3) giallo 4) fantascienza 5) romanzo 6) saggio // inizializzato a zero ogni elemento
     char *generi[] = {"CLASSICO", "FANTASY", "GIALLO", "FANTASCIENZA", "ROMANZO", "SAGGIO"};
 
     if (numero_libri == 0)
@@ -1083,7 +1086,7 @@ void conteggio_libri(libro *ptr_libri, int numero_libri)
             if (strcmp(ptr_libri[i].genere, generi[j]) == 0)
             {
                 contatori[j] += 1; // aggiorno il contatore del j-genere dato che c'è corrispondenza tra vettore contatori e generi
-                break;             // una volta trovato il genere posso uscire dal ciclo più interno
+                break;             // una volta trovato il genere posso uscire dal ciclo più interno (assumo che ogni libro appartenga ad un solo genere)
             }
         }
     }
@@ -1091,7 +1094,8 @@ void conteggio_libri(libro *ptr_libri, int numero_libri)
     // stampo i risultati
     for (int i = 0; i < 6; i++)
     {
-        printf("Numero di %s: %d\n", generi[i], contatori[i]);
+        printf("Numero di libri del genere %s: %d\n", generi[i], contatori[i]);
+        printf("\n");
     }
 }
 
@@ -1153,13 +1157,11 @@ void libri_più_prestati(libro *ptr_libri, int numero_libri, prestito *ptr_prest
         return;
     }
 
-    // ciclo per memorizzare numero volte che ciascu
+    // ciclo per memorizzare numero volte che ciascun lbro è stato prestato
     for (int i = 0; i < numero_libri; i++)
     {
         num_prestiti_per_libro[i] = n_volte_libro_prestato((ptr_libri + i), ptr_prestiti, numero_prestiti); // num_prestiti_per_libro[i] = numero di volte che è stato prestato libri[i]
     }
-
-    // gestisco casi numero_libri < 5
 
     // dato che voglio sapere i 5 libri più prestati, ciclo da 1 a 5
     int temp;
@@ -1167,7 +1169,7 @@ void libri_più_prestati(libro *ptr_libri, int numero_libri, prestito *ptr_prest
     {
         temp = indice_max(num_prestiti_per_libro, numero_libri);
 
-        if (num_prestiti_per_libro[temp] == 0) // gestisco caso
+        if (num_prestiti_per_libro[temp] == 0) // gestisco caso in cui ho meno di 5 libri prestati
         {
             // non ha senso continuare a stampare se il numero di volte che è stato prestato il (j+1)-esimo libro più richiesto è pari a zero; dunque mi fermo
             printf("Sono stati prestati solo %d in totale!\n", j);
@@ -1177,7 +1179,7 @@ void libri_più_prestati(libro *ptr_libri, int numero_libri, prestito *ptr_prest
         {
             printf("il %d libro più prestato è: %s di %s\n", j + 1, ptr_libri[temp].titolo, ptr_libri[temp].autore);
             printf("prestato: %d volte\n", num_prestiti_per_libro[temp]);
-            printf("posizione: %d libro registrato\n", temp);
+            printf("posizione: è il %d libro registrato\n", temp + 1);
             num_prestiti_per_libro[temp] = -1; // annullo il valore in modo che alla prossima iterazione indice_max restituisca l'indice dell'elemento più prestato tolti quelli delle prime j iterazioni
         }
     }
