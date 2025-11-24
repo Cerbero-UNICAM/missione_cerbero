@@ -32,12 +32,12 @@ typedef struct
     int restituito;             // restituito=1; mancante=0
 } prestito;
 
-void inserisci_libro(libro *ptr,int cap_libri, int *n);
+void inserisci_libro(libro *ptr, int cap_libri, int *n);
 void cerca_libro_ISBN(libro *ptr, int n);
-void stampa_lista_libri(libro *ptr,int n);
+void stampa_lista_libri(libro *ptr, int n);
 void cerca_libro_autore(libro *ptr, int n);
-char* stringa_maiuscolo(char *str);
-void libri_disponibili_prestito(libro *ptr,int n);
+char *stringa_maiuscolo(char *str);
+void libri_disponibili_prestito(libro *ptr, int n);
 // 6 - inserisci nuovo utente
 void inserisci_utente(utente *ptr, int *ptr_num_utenti, int *ptr_capacità);
 void visualizza_utenti(utente *ptr, int numero_utenti);
@@ -149,49 +149,56 @@ int main()
         {
         case 1:
             printf("\n--- Inserisci nuovo libro ---\n");
-            inserisci_libro(ptr_libri,caplibri,&ctr_libri);
+            inserisci_libro(ptr_libri, caplibri, &ctr_libri);
             break;
 
         case 2:
             printf("\n--- Visualizza tutti i libri ---\n");
-            if (ctr_libri <= 0){
+            if (ctr_libri <= 0)
+            {
                 puts("nessun libro registrato");
                 break;
             }
-            else{
-                stampa_lista_libri(ptr_libri,ctr_libri);
+            else
+            {
+                stampa_lista_libri(ptr_libri, ctr_libri);
                 break;
             }
 
         case 3:
             printf("\n--- Cerca libro per ISBN ---\n");
-            if (ctr_libri <= 0){
+            if (ctr_libri <= 0)
+            {
                 puts("nessun libro registrato");
                 break;
             }
-            else{
-                cerca_libro_ISBN(ptr_libri,ctr_libri);
+            else
+            {
+                cerca_libro_ISBN(ptr_libri, ctr_libri);
                 break;
             }
 
         case 4:
             printf("\n--- Cerca libri per autore ---\n");
-            if (ctr_libri <= 0){
+            if (ctr_libri <= 0)
+            {
                 puts("nessun libro registrato");
                 break;
             }
-            else{
-                cerca_libro_autore(ptr_libri,ctr_libri);
+            else
+            {
+                cerca_libro_autore(ptr_libri, ctr_libri);
                 break;
             }
 
         case 5:
             printf("\n--- Libri disponibili per prestito ---\n");
-            if (ctr_libri <= 0){
+            if (ctr_libri <= 0)
+            {
                 puts("nessun libro registrato");
                 break;
             }
-            libri_disponibili_prestito(ptr_libri,ctr_libri);
+            libri_disponibili_prestito(ptr_libri, ctr_libri);
             break;
 
         case 6:
@@ -205,7 +212,7 @@ int main()
 
         case 8:
             printf("\n--- Cerca utente per codice ---\n");
-            cerca_utente(ptr_utenti, conta_utenti); 
+            cerca_utente(ptr_utenti, conta_utenti);
             break;
 
         case 9:
@@ -292,28 +299,31 @@ int main()
 
 // 1 inserisci nuovo libro
 
-void inserisci_libro(libro *ptr,int cap_libri, int *n)
+void inserisci_libro(libro *ptr, int cap_libri, int *n)
 {
     int c;
     int k = *n;
-    int j; //indice scelta switch
+    int j; // indice scelta switch
     int verifica_ISBN;
 
-    if(k >= cap_libri){  //controllo se posso inserier un altro libro
+    if (k >= cap_libri)
+    { // controllo se posso inserier un altro libro
         puts("spazio insufficiente, impossibile inserire un nuovo libro");
         return;
     }
 
     puts("inserisci i seguenti dati del libro");
 
-    printf("codice ISBN(XXX-X-XXXX-XXXX-X): ");         //inserimento informazioni libro
-    scanf("%s", (ptr + k)->codice_ISBN);
-    verifica_ISBN = is_ISBN((ptr + k)->codice_ISBN);    // verifica formato ISBN
-    if (verifica_ISBN == 0){
+    printf("codice ISBN(XXX-X-XXXX-XXXX-X): "); // inserimento informazioni libro
+    scanf("%17s", (ptr + k)->codice_ISBN);
+    verifica_ISBN = is_ISBN((ptr + k)->codice_ISBN); // verifica formato ISBN
+    if (verifica_ISBN == 0)
+    {
         puts("Formato non valido");
         return;
     }
-    while ((c = getchar()) != '\n');        // pulire stdin
+    while ((c = getchar()) != '\n')
+        ; // pulire stdin
     for (int i = 0; i < k; i++)
     {
         if (strcmp((ptr + k)->codice_ISBN, (ptr + i)->codice_ISBN) == 0)
@@ -338,7 +348,8 @@ void inserisci_libro(libro *ptr,int cap_libri, int *n)
         printf("anno non valido, inserire un anno tra il 1800 e il 2025: ");
         scanf("%d", &((ptr + k)->anno_pubblicazione));
     }
-    while ((c = getchar()) != '\n'); // pulire stdin
+    while ((c = getchar()) != '\n')
+        ; // pulire stdin
 
     printf("numero copie: ");
     scanf("%d", &((ptr + k)->numero_copie));
@@ -350,48 +361,48 @@ void inserisci_libro(libro *ptr,int cap_libri, int *n)
     while ((c = getchar()) != '\n')
         ; // pulire stdin
 
-    do{
-         printf("Scegli uno tra i seguenti generi:\n1 Fantasy\n2 Classico\n3 Saggi\n4 Fantascienza\n5 Giallo\n6 Romanzo\n");
-        scanf("%d",&j);
+    do
+    {
+        printf("Scegli uno tra i seguenti generi:\n1 Fantasy\n2 Classico\n3 Saggi\n4 Fantascienza\n5 Giallo\n6 Romanzo\n");
+        scanf("%d", &j);
         switch (j)
         {
         case 1:
-            strcpy((ptr + k)->genere,"FANTASY");
+            strcpy((ptr + k)->genere, "FANTASY");
             break;
         case 2:
-            strcpy((ptr + k)->genere,"CLASSICO");
+            strcpy((ptr + k)->genere, "CLASSICO");
             break;
         case 3:
-            strcpy((ptr + k)->genere,"SAGGI");
+            strcpy((ptr + k)->genere, "SAGGI");
             break;
         case 4:
-            strcpy((ptr + k)->genere,"FANTASCIENZA");
+            strcpy((ptr + k)->genere, "FANTASCIENZA");
             break;
         case 5:
-            strcpy((ptr + k)->genere,"GIALLO");
+            strcpy((ptr + k)->genere, "GIALLO");
             break;
         case 6:
-           strcpy((ptr + k)->genere,"ROMANZO");
-           break;
+            strcpy((ptr + k)->genere, "ROMANZO");
+            break;
         default:
-           puts("numero inserito non valido");
-           break;
+            puts("numero inserito non valido");
+            break;
         }
-    } while(j > 6 || j < 1);
-    *n += 1;        //incremento il counter dei libri salvati nel puntatore
+    } while (j > 6 || j < 1);
+    *n += 1; // incremento il counter dei libri salvati nel puntatore
 }
-
 
 void cerca_libro_ISBN(libro *ptr, int n)
 {
     char temp[18];
 
     printf("inserisci l ISBN da cercare(XXX-X-XXXX-XXXX-X): ");
-    scanf("%s", temp);
+    scanf("%17s", temp);
     for (int i = 0; i < n; i++)
     {
-        if (strcmp(temp, (ptr + i)->codice_ISBN) == 0)  //confronto tra il codice inserito e la lista dei libri
-        { 
+        if (strcmp(temp, (ptr + i)->codice_ISBN) == 0) // confronto tra il codice inserito e la lista dei libri
+        {
             printf("Titolo: %s\nAutore: %s\nAnno di pubblicazione: %d\nNumero copie: %d\nGenere: %s", (ptr + i)->titolo, (ptr + i)->autore, (ptr + i)->anno_pubblicazione, (ptr + i)->numero_copie, (ptr + i)->genere);
             return;
         }
@@ -399,64 +410,79 @@ void cerca_libro_ISBN(libro *ptr, int n)
     printf("Nessun libro trovato");
 }
 
-void stampa_lista_libri(libro *ptr,int n){
+void stampa_lista_libri(libro *ptr, int n)
+{
 
     int len_autore = 0;
     int len_titolo = 0;
 
-    for(int i = 0;i < n;i++){       //trovo la massima lunghezza delle stringhe per formattare la tabella 
-        int temp0 = strlen((ptr+i)->autore);
-        int temp1 = strlen((ptr+i)->titolo);
-        if (temp0 > len_autore){
+    for (int i = 0; i < n; i++)
+    { // trovo la massima lunghezza delle stringhe per formattare la tabella
+        int temp0 = strlen((ptr + i)->autore);
+        int temp1 = strlen((ptr + i)->titolo);
+        if (temp0 > len_autore)
+        {
             len_autore = temp0;
         }
-        if(temp1 > len_titolo){
+        if (temp1 > len_titolo)
+        {
             len_titolo = temp1;
         }
-    }//segmentatio fault
-    printf("%-18s | %-*s | %-*s | %-21s | %-13s | %-12s\n","Codice ISBN",len_autore,"Autore",len_titolo,"Titolo","Anno di pubblicazione","Genere","Numero copie");
-    for (int j = 0; j < n;j++){
-        printf("%-18s | %-*s | %-*s | %-21d | %-13s | %-12d\n",(ptr+j)->codice_ISBN,len_autore,(ptr+j)->autore,len_titolo,(ptr+j)->titolo,(ptr+j)->anno_pubblicazione,(ptr+j)->genere,(ptr+j)->numero_copie);
+    } // segmentatio fault
+    printf("%-18s | %-*s | %-*s | %-21s | %-13s | %-12s\n", "Codice ISBN", len_autore, "Autore", len_titolo, "Titolo", "Anno di pubblicazione", "Genere", "Numero copie");
+    for (int j = 0; j < n; j++)
+    {
+        printf("%-18s | %-*s | %-*s | %-21d | %-13s | %-12d\n", (ptr + j)->codice_ISBN, len_autore, (ptr + j)->autore, len_titolo, (ptr + j)->titolo, (ptr + j)->anno_pubblicazione, (ptr + j)->genere, (ptr + j)->numero_copie);
     }
 }
 
-void cerca_libro_autore(libro *ptr,int n){
-    char str_temp0[51];      //immagazzino la stringa da ricercare
-    char str_temp1[51];      //var temp per non modificare i nomi nel puntatore
+void cerca_libro_autore(libro *ptr, int n)
+{
+    char str_temp0[51]; // immagazzino la stringa da ricercare
+    char str_temp1[51]; // var temp per non modificare i nomi nel puntatore
     puts("inserisci il nome dell autore da ricercare");
-    scanf("%s",str_temp0);
-    printf("i libri di %s sono: ",str_temp0);
-    for(int i = 0;i < n;i++){
-        strcpy(str_temp1, (ptr+i)->autore);           // copia autore in temp
-        stringa_maiuscolo(str_temp1);             // converto la copia in maiuscolo
-        if(strcmp(str_temp1, str_temp0) == 0){    //confronto le due stringhe per tutti i libri
-            printf("%s\n",(ptr+i)->titolo);
+    scanf("%50s", str_temp0);
+    printf("i libri di %s sono: ", str_temp0);
+    for (int i = 0; i < n; i++)
+    {
+        strcpy(str_temp1, (ptr + i)->autore); // copia autore in temp
+        stringa_maiuscolo(str_temp1);         // converto la copia in maiuscolo
+        if (strcmp(str_temp1, str_temp0) == 0)
+        { // confronto le due stringhe per tutti i libri
+            printf("%s\n", (ptr + i)->titolo);
         }
     }
 }
 
-void libri_disponibili_prestito(libro *ptr,int n){
-    libro *ptr_temp[n-1];  //creo un array di puntatori per non ordinare il puntatore originale
-    libro *temp;        //variabile d appoggio per bubble sort
+void libri_disponibili_prestito(libro *ptr, int n)
+{
+    libro *ptr_temp[n - 1]; // creo un array di puntatori per non ordinare il puntatore originale
+    libro *temp;            // variabile d appoggio per bubble sort
 
-    for(int i = 0;i < n;i++){
-        ptr_temp[i] = (ptr+i);
+    for (int i = 0; i < n; i++)
+    {
+        ptr_temp[i] = (ptr + i);
     }
 
-    for(int i = 0;i < n-1;i++){         //bubble sort(strcmp resituisce > 0 se str1 è dopo str2)
-        for(int j = 0;j < n - i - 1;j++){
-            if(strcmp(ptr_temp[j]->titolo,ptr_temp[j+1]->titolo) > 0){
-                temp = ptr_temp[j];     //scambio gli indirizzi
-                ptr_temp[j] = ptr_temp[j+1];
-                ptr_temp[j+1] = temp;
+    for (int i = 0; i < n - 1; i++)
+    { // bubble sort(strcmp resituisce > 0 se str1 è dopo str2)
+        for (int j = 0; j < n - i - 1; j++)
+        {
+            if (strcmp(ptr_temp[j]->titolo, ptr_temp[j + 1]->titolo) > 0)
+            {
+                temp = ptr_temp[j]; // scambio gli indirizzi
+                ptr_temp[j] = ptr_temp[j + 1];
+                ptr_temp[j + 1] = temp;
             }
         }
     }
 
     puts("libri disponibili per il prestito");
-    for(int k = 0;k < n;k++){       //stampo solo libri disponibili
-        if((ptr+k)->numero_copie > 0){
-            printf("%s\n",ptr_temp[k]->titolo);
+    for (int k = 0; k < n; k++)
+    { // stampo solo libri disponibili
+        if ((ptr + k)->numero_copie > 0)
+        {
+            printf("%s\n", ptr_temp[k]->titolo);
         }
     }
 }
@@ -466,7 +492,7 @@ void libri_disponibili_prestito(libro *ptr,int n){
 // 6 - Inserisci nuovo utente
 void inserisci_utente(utente *ptr, int *ptr_num_utenti, int *ptr_capacità)
 {
-     if (*ptr_num_utenti >= *ptr_capacità)
+    if (*ptr_num_utenti >= *ptr_capacità)
     {
         printf("Errore: impossibile registrare nuovo utente! Capacità massima raggiunta!\n");
         return;
@@ -505,8 +531,8 @@ void inserisci_utente(utente *ptr, int *ptr_num_utenti, int *ptr_capacità)
             {
                 printf("Il codice utente inserito è già stato utilizzato!\nInserirne uno diverso:\n");
                 scanf("%d", &new_codice_utente); // modifica il valore del codice utente
-                codice_valido = 0; // modifico valore perchè devo rientrare nel ciclo al fine di verificare che il nuovo codice appena inserito sia valido
-                break; // esce solo dal for
+                codice_valido = 0;               // modifico valore perchè devo rientrare nel ciclo al fine di verificare che il nuovo codice appena inserito sia valido
+                break;                           // esce solo dal for
             }
         }
     }
