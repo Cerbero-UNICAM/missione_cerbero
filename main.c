@@ -64,8 +64,7 @@ void libri_più_prestati(libro *ptr_libri, int numero_libri, prestito *ptr_prest
 int main()
 {
     int scelta;
-    int *ctr_libri;
-    *ctr_libri = 0;
+    int ctr_libri = 0;
 
     // Apertura file binario per i libri in lettura scrittura
     /*FILE *fp_libro;
@@ -150,27 +149,27 @@ int main()
         {
         case 1:
             printf("\n--- Inserisci nuovo libro ---\n");
-            inserisci_libro(ptr_libri,caplibri,ctr_libri);
+            inserisci_libro(ptr_libri,caplibri,&ctr_libri);
             break;
 
         case 2:
             printf("\n--- Visualizza tutti i libri ---\n");
-            stampa_lista_libri(ptr_libri,*ctr_libri);
+            stampa_lista_libri(ptr_libri,ctr_libri);
             break;
 
         case 3:
             printf("\n--- Cerca libro per ISBN ---\n");
-            cerca_libro_ISBN(ptr_libri,*ctr_libri);
+            cerca_libro_ISBN(ptr_libri,ctr_libri);
             break;
 
         case 4:
             printf("\n--- Cerca libri per autore ---\n");
-            cerca_libro_autore(ptr_libri,*ctr_libri);
+            cerca_libro_autore(ptr_libri,ctr_libri);
             break;
 
         case 5:
             printf("\n--- Libri disponibili per prestito ---\n");
-            libri_disponibili_prestito(ptr_libri,*ctr_libri);
+            libri_disponibili_prestito(ptr_libri,ctr_libri);
             break;
 
         case 6:
@@ -189,37 +188,37 @@ int main()
 
         case 9:
             printf("\n--- Registra nuovo prestito ---\n");
-            registra_prestito(ptr_libri, *ctr_libri, ptr_utenti, conta_utenti, ptr_prestiti, &conta_prestiti, capprestiti);
+            registra_prestito(ptr_libri, ctr_libri, ptr_utenti, conta_utenti, ptr_prestiti, &conta_prestiti, capprestiti);
             break;
 
         case 10:
             printf("\n--- Registra restituzione libro ---\n");
-            registra_restituzione(ptr_prestiti, conta_prestiti, ptr_libri, *ctr_libri);
+            registra_restituzione(ptr_prestiti, conta_prestiti, ptr_libri, ctr_libri);
             break;
 
         case 11:
             printf("\n--- Visualizza prestiti attivi ---\n");
-            visualizza_prestiti_attivi(ptr_libri, *ctr_libri, ptr_utenti, conta_utenti, ptr_prestiti, conta_prestiti);
+            visualizza_prestiti_attivi(ptr_libri, ctr_libri, ptr_utenti, conta_utenti, ptr_prestiti, conta_prestiti);
             break;
 
         case 12:
             printf("\n--- Visualizza storico prestiti utente ---\n");
-            visualizza_storico_utente(ptr_libri, *ctr_libri, ptr_utenti, conta_utenti, ptr_prestiti, conta_prestiti);
+            visualizza_storico_utente(ptr_libri, ctr_libri, ptr_utenti, conta_utenti, ptr_prestiti, conta_prestiti);
             break;
 
         case 13:
             printf("\n--- Statistiche generali ---\n");
-            statistiche_generali(*ctr_libri, conta_utenti, conta_prestiti, ptr_prestiti, ptr_libri);
+            statistiche_generali(ctr_libri, conta_utenti, conta_prestiti, ptr_prestiti, ptr_libri);
             break;
 
         case 14:
             printf("\n--- Libri per genere ---\n");
-            conteggio_libri(ptr_libri, *ctr_libri);
+            conteggio_libri(ptr_libri, ctr_libri);
             break;
 
         case 15:
             printf("\n--- Top 5 libri piu' prestati ---\n");
-            libri_più_prestati(ptr_libri, *ctr_libri, ptr_prestiti, conta_prestiti);
+            libri_più_prestati(ptr_libri, ctr_libri, ptr_prestiti, conta_prestiti);
             break;
 
         case 16:
