@@ -392,9 +392,9 @@ void stampa_lista_libri(libro *ptr,int n){
             len_titolo = temp1;
         }
     }//segmentatio fault
-    printf("%-15s | %-*s | %-*s | %-21s | %-13s | %-12s\n","Codice ISBN",len_autore,"Autore",len_titolo,"Titolo","Anno di pubblicazione","Genere","Numero copie");
+    printf("%-18s | %-*s | %-*s | %-21s | %-13s | %-12s\n","Codice ISBN",len_autore,"Autore",len_titolo,"Titolo","Anno di pubblicazione","Genere","Numero copie");
     for (int j = 0; j < n;j++){
-        printf("%-15s | %-*s | %-*s | %-17d | %-13s | %-12d\n",(ptr+j)->codice_ISBN,len_autore,(ptr+j)->autore,len_titolo,(ptr+j)->titolo,(ptr+j)->anno_pubblicazione,(ptr+j)->genere,(ptr+j)->numero_copie);
+        printf("%-18s | %-*s | %-*s | %-21d | %-13s | %-12d\n",(ptr+j)->codice_ISBN,len_autore,(ptr+j)->autore,len_titolo,(ptr+j)->titolo,(ptr+j)->anno_pubblicazione,(ptr+j)->genere,(ptr+j)->numero_copie);
     }
 }
 
@@ -405,7 +405,7 @@ void cerca_libro_autore(libro *ptr,int n){
     scanf("%s",str_temp0);
     printf("i libri di %s sono: ",str_temp0);
     for(int i = 0;i < n;i++){
-        strcpy(str_temp1, ptr->autore);           // copia autore in temp
+        strcpy(str_temp1, (ptr+i)->autore);           // copia autore in temp
         stringa_maiuscolo(str_temp1);             // converto la copia in maiuscolo
         if(strcmp(str_temp1, str_temp0) == 0){    //confronto le due stringhe per tutti i libri
             printf("%s\n",(ptr+i)->titolo);
@@ -423,10 +423,10 @@ void libri_disponibili_prestito(libro *ptr,int n){
 
     for(int i = 0;i < n-1;i++){         //bubble sort(strcmp resituisce > 0 se str1 è dopo str2)
         for(int j = 0;j < n - i - 1;j++){
-            if(strcmp(ptr_temp[i]->titolo,ptr_temp[i+1]->titolo) > 0){
+            if(strcmp(ptr_temp[j]->titolo,ptr_temp[j+1]->titolo) > 0){
                 temp = ptr_temp[j];     //scambio gli indirizzi
-                ptr_temp[i] = ptr_temp[i+1];
-                ptr_temp[i+1] = temp;
+                ptr_temp[j] = ptr_temp[j+1];
+                ptr_temp[j+1] = temp;
             }
         }
     }
@@ -854,7 +854,7 @@ void calcoladata(char *data)
 
     // sostituisco stringa data
     char output[11];
-    snprintf(output, sizeof(output), "%02d/%02d/%04d", giorno, mese, anno);
+    sprintf(output, "%02d/%02d/%04d", giorno, mese, anno);
     strcpy(data, output);
 }
 // fine calcoladata
@@ -980,7 +980,7 @@ void salva_nomeUtente(int cod_utente, utente *ptr_utenti, int conta_utenti, char
     {
         if (cod_utente == ptr_utenti[i].codice_utente) // se l'ho trovato ...
         {
-            snprintf(nome_utente, sizeof(nome_utente), "%s %s", ptr_utenti[i].nome, ptr_utenti[i].cognome); // salvo
+            sprintf(nome_utente, "%s %s", ptr_utenti[i].nome, ptr_utenti[i].cognome); // salvo
             return;
         }
     }
