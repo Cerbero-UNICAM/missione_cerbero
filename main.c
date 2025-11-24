@@ -154,21 +154,43 @@ int main()
 
         case 2:
             printf("\n--- Visualizza tutti i libri ---\n");
-            stampa_lista_libri(ptr_libri,ctr_libri);
-            break;
+            if (ctr_libri <= 0){
+                puts("nessun libro registrato");
+                break;
+            }
+            else{
+                stampa_lista_libri(ptr_libri,ctr_libri);
+                break;
+            }
 
         case 3:
             printf("\n--- Cerca libro per ISBN ---\n");
-            cerca_libro_ISBN(ptr_libri,ctr_libri);
-            break;
+            if (ctr_libri <= 0){
+                puts("nessun libro registrato");
+                break;
+            }
+            else{
+                cerca_libro_ISBN(ptr_libri,ctr_libri);
+                break;
+            }
 
         case 4:
             printf("\n--- Cerca libri per autore ---\n");
-            cerca_libro_autore(ptr_libri,ctr_libri);
-            break;
+            if (ctr_libri <= 0){
+                puts("nessun libro registrato");
+                break;
+            }
+            else{
+                cerca_libro_autore(ptr_libri,ctr_libri);
+                break;
+            }
 
         case 5:
             printf("\n--- Libri disponibili per prestito ---\n");
+            if (ctr_libri <= 0){
+                puts("nessun libro registrato");
+                break;
+            }
             libri_disponibili_prestito(ptr_libri,ctr_libri);
             break;
 
