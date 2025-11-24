@@ -35,7 +35,7 @@ typedef struct
 void inserisci_libro(libro *ptr,int cap_libri, int *n);
 void cerca_libro_ISBN(libro *ptr, int n);
 void stampa_lista_libro(libro *ptr,int n);
-void cerca_libro_autore(libro *ptr,int n)
+void cerca_libro_autore(libro *ptr,int n);
 
 
 // 6 - inserisci nuovo utente
@@ -153,12 +153,12 @@ int main()
 
         case 3:
             printf("\n--- Cerca libro per ISBN ---\n");
-            cerca_libro_ISBN(ptr_libri, ctr_libri);
+            cerca_libro_ISBN(ptr_libri, *ctr_libri);
             break;
 
         case 4:
             printf("\n--- Cerca libri per autore ---\n");
-            // Qui implementerai la ricerca per autore
+            cerca_libro_autore(ptr_libri,ctr_libri);
             break;
 
         case 5:
@@ -398,6 +398,32 @@ void cerca_libro_autore(libro *ptr,int n){
         stringa_maiuscolo(str_temp1);             // converto la copia in maiuscolo
         if(strcmp(str_temp1, str_temp0) == 0){    //confronto le due stringhe per tutti i libri
             printf("%s\n",(ptr+i)->titolo);
+        }
+    }
+}
+
+void libri_disponibili_prestito(libro *ptr,int n){
+    libro *ptr_temp[n-1];  //creo un array di puntatori per non ordinare il puntatore originale
+    char* temp;        //variabile d appoggio per bubble sort
+
+    for(int i = 0;i < n;i++){
+        ptr_temp[i] = (ptr+i);
+    }
+
+    for(int i = 0;i < n-1;i++){         //bubble sort(strcmp resituisce > 0 se str1 è dopo str2)
+        for(int j = 0;j < n - i - 1;j++){
+            if(strcmp(ptr_temp[i]->titolo,ptr_temp[i+1]->titolo) > 0){
+                temp = ptr_temp[j];     //scambio gli indirizzi
+                ptr_temp[i] = ptr_temp[i+1];
+                ptr_temp[i+1] = temp;
+            }
+        }
+    }
+
+    puts("libri disponibili per il prestito");
+    for(int k = 0;k < n;k++){       //stampo solo libri disponibili
+        if((ptr+k)->numero_copie > 0){
+            printf("%s\n",ptr_temp[k]->titolo);
         }
     }
 }
