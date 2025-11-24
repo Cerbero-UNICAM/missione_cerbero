@@ -854,7 +854,7 @@ void calcoladata(char *data)
 
     // sostituisco stringa data
     char output[11];
-    sprintf(output, "%02d/%02d/%04d", giorno, mese, anno);
+    snprintf(output, sizeof(output), "%02d/%02d/%04d", giorno, mese, anno);
     strcpy(data, output);
 }
 // fine calcoladata
@@ -980,7 +980,7 @@ void salva_nomeUtente(int cod_utente, utente *ptr_utenti, int conta_utenti, char
     {
         if (cod_utente == ptr_utenti[i].codice_utente) // se l'ho trovato ...
         {
-            sprintf(nome_utente, "%s %s", ptr_utenti[i].nome, ptr_utenti[i].cognome); // salvo
+            snprintf(nome_utente, sizeof(nome_utente), "%s %s", ptr_utenti[i].nome, ptr_utenti[i].cognome); // salvo
             return;
         }
     }
