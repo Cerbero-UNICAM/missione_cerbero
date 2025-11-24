@@ -411,7 +411,7 @@ void cerca_libro_autore(libro *ptr,int n){
 
 void libri_disponibili_prestito(libro *ptr,int n){
     libro *ptr_temp[n-1];  //creo un array di puntatori per non ordinare il puntatore originale
-    char* temp;        //variabile d appoggio per bubble sort
+    libro *temp;        //variabile d appoggio per bubble sort
 
     for(int i = 0;i < n;i++){
         ptr_temp[i] = (ptr+i);
