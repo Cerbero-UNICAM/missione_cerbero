@@ -276,6 +276,7 @@ void inserisci_libro(libro *ptr,int cap_libri, int *n)
     int c;
     int k = *n;
     int j; //indice scelta switch
+    int verifica_ISBN;
 
     if(k >= cap_libri){  //controllo se posso inserier un altro libro
         puts("spazio insufficiente, impossibile inserire un nuovo libro");
@@ -286,14 +287,18 @@ void inserisci_libro(libro *ptr,int cap_libri, int *n)
 
     printf("codice ISBN(XXX-X-XXXX-XXXX-X): ");         //inserimento informazioni libro
     scanf("%s", (ptr + k)->codice_ISBN);
-    while ((c = getchar()) != '\n'); // pulire stdin
+    verifica_ISBN = is_ISBN((ptr + k)->codice_ISBN);    // verifica formato ISBN
+    if (verifica_ISBN == 0){
+        puts("Formato non valido");
+        return;
+    }
+    while ((c = getchar()) != '\n');        // pulire stdin
     for (int i = 0; i < k; i++)
     {
         if (strcmp((ptr + k)->codice_ISBN, (ptr + i)->codice_ISBN) == 0)
         { // controllo unicità ISBN
-            puts("l ISBN è uguale ad un libro gia esistente,inseriscine un altro");
-            scanf("%s", (ptr + k)->codice_ISBN);
-             while ((c = getchar()) != '\n');
+            puts("l ISBN è uguale ad un libro gia esistente");
+            return;
         }
     }
 
