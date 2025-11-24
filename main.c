@@ -32,8 +32,12 @@ typedef struct
     int restituito;             // restituito=1; mancante=0
 } prestito;
 
-void inserisci_libro(libro *ptr, int *n);
-void cerca_libro_ISBN(libro *ptr, int *n);
+void inserisci_libro(libro *ptr,int cap_libri, int *n);
+void cerca_libro_ISBN(libro *ptr, int n);
+void stampa_lista_libro(libro *ptr,int n);
+void cerca_libro_autore(libro *ptr,int n)
+
+
 // 6 - inserisci nuovo utente
 void inserisci_utente(utente *ptr, int *ptr_num_utenti, int *ptr_capacità);
 void visualizza_utenti(utente *ptr, int numero_utenti);
@@ -139,7 +143,7 @@ int main()
         {
         case 1:
             printf("\n--- Inserisci nuovo libro ---\n");
-            inserisci_libro(ptr_libri, ctr_libri);
+            inserisci_libro(ptr_libri,caplibri, ctr_libri);
             break;
 
         case 2:
@@ -260,23 +264,29 @@ int main()
 
 // 1 inserisci nuovo libro
 
-void inserisci_libro(libro *ptr, int *n)
+void inserisci_libro(libro *ptr,int cap_libri, int *n)
 {
     int c;
     int k = *n;
+    int j; //indice scelta switch
+
+    if(k >= cap_libri){  //controllo se posso inserier un altro libro
+        puts("spazio insufficiente, impossibile inserire un nuovo libro");
+        return;
+    }
 
     puts("inserisci i seguenti dati del libro");
 
-    printf("codice ISBN(XXX-X-XXXX-XXXX-X): ");
+    printf("codice ISBN(XXX-X-XXXX-XXXX-X): ");         //inserimento informazioni libro
     scanf("%s", (ptr + k)->codice_ISBN);
-    while ((c = getchar()) != '\n')
-        ; // pulire stdin
+    while ((c = getchar()) != '\n'); // pulire stdin
     for (int i = 0; i < k; i++)
     {
         if (strcmp((ptr + k)->codice_ISBN, (ptr + i)->codice_ISBN) == 0)
         { // controllo unicità ISBN
-            printf("l ISBN è uguale ad un libro gia esistente,inseriscine un altro");
+            puts("l ISBN è uguale ad un libro gia esistente,inseriscine un altro");
             scanf("%s", (ptr + k)->codice_ISBN);
+             while ((c = getchar()) != '\n');
         }
     }
 
@@ -295,8 +305,7 @@ void inserisci_libro(libro *ptr, int *n)
         printf("anno non valido, inserire un anno tra il 1800 e il 2025: ");
         scanf("%d", &((ptr + k)->anno_pubblicazione));
     }
-    while ((c = getchar()) != '\n')
-        ; // pulire stdin
+    while ((c = getchar()) != '\n'); // pulire stdin
 
     printf("numero copie: ");
     scanf("%d", &((ptr + k)->numero_copie));
@@ -308,24 +317,48 @@ void inserisci_libro(libro *ptr, int *n)
     while ((c = getchar()) != '\n')
         ; // pulire stdin
 
-    printf("genere: ");
-    fgets((ptr + k)->genere, sizeof((ptr + k)->genere), stdin);
-    (ptr + k)->genere[strcspn((ptr + k)->genere, "\n")] = '\0';
-
-    *n += 1;
+    do{
+         printf("Scegli uno tra i seguenti generi:\n1 Fantasy\n2 Classico\n3 Saggi\n4 Fantascienza\n5 Giallo\n6 Romanzo\n");
+        scanf("%d",&j);
+        switch (j)
+        {
+        case 1:
+            strcpy((ptr + k)->genere,"FANTASY");
+            break;
+        case 2:
+            strcpy((ptr + k)->genere,"CLASSICO");
+            break;
+        case 3:
+            strcpy((ptr + k)->genere,"SAGGI");
+            break;
+        case 4:
+            strcpy((ptr + k)->genere,"FANTASCIENZA");
+            break;
+        case 5:
+            strcpy((ptr + k)->genere,"GIALLO");
+            break;
+        case 6:
+           strcpy((ptr + k)->genere,"ROMANZO");
+           break;
+        default:
+           puts("numero inserito non valido");
+           break;
+        }
+    } while(j > 6 || j < 1);
+    *n += 1;        //incremento il counter dei libri salvati nel puntatore
 }
 
-void cerca_libro_ISBN(libro *ptr, int *n)
+
+void cerca_libro_ISBN(libro *ptr, int n)
 {
     char temp[18];
-    int k = *n;
 
     printf("inserisci l ISBN da cercare(XXX-X-XXXX-XXXX-X): ");
     scanf("%s", temp);
-    for (int i = 0; i < k; i++)
+    for (int i = 0; i < n; i++)
     {
-        if (strcmp(temp, (ptr + i)->codice_ISBN) == 0)
-        { // fai una funzione visulizza libro in modo da avere gia la funzione anche per visualizza libri(basta applicare un for)
+        if (strcmp(temp, (ptr + i)->codice_ISBN) == 0)  //confronto tra il codice inserito e la lista dei libri
+        { 
             printf("Titolo: %s\nAutore: %s\nAnno di pubblicazione: %d\nNumero copie: %d\nGenere: %s", (ptr + i)->titolo, (ptr + i)->autore, (ptr + i)->anno_pubblicazione, (ptr + i)->numero_copie, (ptr + i)->genere);
             return;
         }
@@ -333,6 +366,41 @@ void cerca_libro_ISBN(libro *ptr, int *n)
     printf("Nessun libro trovato");
 }
 
+void stampa_lista_libri(libro *ptr,int n){
+
+    int len_autore = 0;
+    int len_titolo = 0;
+
+    for(int i = 0;i < n;i++){       //trovo la massima lunghezza delle stringhe per formattare la tabella 
+        int temp0 = strlen((ptr+i)->autore);
+        int temp1 = strlen((ptr+i)->titolo);
+        if (temp0 > len_autore){
+            len_autore = temp0;
+        }
+        if(temp1 > len_titolo){
+            len_titolo = temp1;
+        }
+    }//segmentatio fault
+    printf("%-15s | %-*s | %-*s | %-21s | %-13s | %-12s\n","Codice ISBN",len_autore,"Autore",len_titolo,"Titolo","Anno di pubblicazione","Genere","Numero copie");
+    for (int j = 0; j < n;j++){
+        printf("%-15s | %-*s | %-*s | %-17d | %-13s | %-12d\n",(ptr+j)->codice_ISBN,len_autore,(ptr+j)->autore,len_titolo,(ptr+j)->titolo,(ptr+j)->anno_pubblicazione,(ptr+j)->genere,(ptr+j)->numero_copie);
+    }
+}
+
+void cerca_libro_autore(libro *ptr,int n){
+    char str_temp0[51];      //immagazzino la stringa da ricercare
+    char str_temp1[51];      //var temp per non modificare i nomi nel puntatore
+    puts("inserisci il nome dell autore da ricercare");
+    scanf("%s",str_temp0);
+    printf("i libri di %s sono: ",str_temp0);
+    for(int i = 0;i < n;i++){
+        strcpy(str_temp1, ptr->autore);           // copia autore in temp
+        stringa_maiuscolo(str_temp1);             // converto la copia in maiuscolo
+        if(strcmp(str_temp1, str_temp0) == 0){    //confronto le due stringhe per tutti i libri
+            printf("%s\n",(ptr+i)->titolo);
+        }
+    }
+}
 // Sezione B
 
 // 6 - Inserisci nuovo utente
