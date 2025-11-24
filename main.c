@@ -155,7 +155,7 @@ int main()
 
         case 2:
             printf("\n--- Visualizza tutti i libri ---\n");
-            
+            stampa_lista_libri(ptr_libri,*ctr_libri);
             break;
 
         case 3:
