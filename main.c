@@ -61,6 +61,8 @@ int n_volte_libro_prestato(libro *ptr_libro, prestito *ptr_prestiti, int numero_
 int indice_max(int *ptr, int numero_elementi);
 void libri_più_prestati(libro *ptr_libri, int numero_libri, prestito *ptr_prestiti, int numero_prestiti);
 
+void stampa_catalogo_file(libro* ptr,int n);
+
 int main()
 {
     int scelta;
@@ -255,7 +257,7 @@ int main()
 
         case 18:
             printf("\n--- Esporta catalogo in formato testo ---\n");
-            // Qui implementerai l'esportazione catalogo
+            stampa_catalogo_file(ptr_libri,ctr_libri);
             break;
 
         case 19:
@@ -1364,3 +1366,19 @@ void libri_più_prestati(libro *ptr_libri, int numero_libri, prestito *ptr_prest
 // aggiungere chiamate ai case nel main
 
 // FINE SEZIONE D
+
+void stampa_catalogo_file(libro* ptr,int n){
+    FILE *fp_catalogo; //apro o creo il file di testo in scrittura
+    fp_catalogo = fopen("Catalgo_libri.txt","w");
+
+    if(fp_catalogo == NULL){        //verifica corretta apertura file
+        puts("Errore, impossibile aprire il file");
+        return;
+    }
+
+    for(int i = 0;i < n;i++){
+        fprintf(fp_catalogo,"ISBN: %s | Titolo: %s | Autore: %s | Anno: %d | Copie: %d | Genere: %s\n",(ptr+i)->codice_ISBN,(ptr+i)->titolo,(ptr+i)->autore,(ptr+i)->anno_pubblicazione,(ptr+i)->numero_copie,(ptr+i)->genere);
+    }
+    fclose(fp_catalogo);
+    puts("File scritto correttamente");
+}
