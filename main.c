@@ -1405,6 +1405,58 @@ void libri_più_prestati(libro *ptr_libri, int numero_libri, prestito *ptr_prest
 
 // FINE SEZIONE D
 
+// INIZIO SEZIONE E 
+
+// 16 - stampa su file binario
+
+void salva_libri_binario(libro *libri, int numero_libri)
+{
+   
+    if (numero_libri == 0)
+    {
+        printf("Il catalogo libri è vuoto! Non vi è nulla da salvare.\n");
+        return;
+    }
+    else
+    {
+        FILE *fp;
+
+   fp = fopen("libri.dat", "wb"); 
+   size_t flag;
+
+   if(fp == NULL)
+   {
+    printf("Errore apertura file in scrittura!\n");
+    return;
+   }
+
+   // salvo numero di elementi in cima al file 
+
+   flag = fwrite(&numero_libri, sizeof(int), 1, fp); 
+
+   if (flag != 1 )
+   {
+    printf("Non è stato possibile salvare su file intero rappresentante il numero di libri!\n");
+    return; 
+   }
+
+   // salvo libri su libri.dat
+
+   flag = fwrite(libri, sizeof(libro), numero_libri, fp);
+
+   if (flag != numero_libri)
+   {
+    printf("Il numero di elementi scritto sul file è pari a %zu invede di %d!\n", flag, numero_libri); 
+   }
+
+   fclose(fp);
+}
+
+
+
+
+}
+
 void stampa_catalogo_file(libro *ptr, int n)
 {
     FILE *fp_catalogo; // apro o creo il file di testo in scrittura
@@ -1423,6 +1475,8 @@ void stampa_catalogo_file(libro *ptr, int n)
     fclose(fp_catalogo);
     puts("File scritto correttamente");
 }
+
+
 
 // SCELTA 19
 
@@ -1476,4 +1530,6 @@ void esporta_report_prestiti(libro *ptr_libri, int conta_libri, utente *ptr_uten
     }
 
     return;
+
+    // FINE SEZIONE E 
 }
