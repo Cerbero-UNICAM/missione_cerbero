@@ -261,7 +261,7 @@ int main()
 
         case 17:
             printf("\n--- Carica database da file binario ---\n");
-            // Qui implementerai il caricamento
+
             break;
 
         case 18:
@@ -300,6 +300,33 @@ int main()
 
     return 0;
 }
+
+int lettore_dimensione_file(const char *nome_file){
+    FILE* fp;
+    size_t flag;
+    int i;
+
+    fp = fopen(nome_file,"rb");
+    if (fp == NULL) {
+        printf("Impossibile aprire il file %s\n",nome_file);
+        return -1;
+    }
+
+    flag = fread(&i,sizeof(int),1,fp);
+    if (flag != 1){    //controllo che sia stato letto un elemento
+        printf("errore nella lettura del file %s\n",nome_file);
+        fclose(fp);
+        return -1;
+    }
+
+    fclose(fp);
+
+    return i;
+}
+
+
+
+
 
 // 1 inserisci nuovo libro
 
@@ -1454,7 +1481,6 @@ void salva_libri_binario(libro *ptr_libri, int numero_libri)
    fclose(fp);
 }
 }
-
 void salva_prestiti_binario(prestito *ptr_prestiti, int numero_prestiti)
 {
    
@@ -1563,6 +1589,8 @@ void stampa_catalogo_file(libro *ptr, int n)
     fclose(fp_catalogo);
     puts("File scritto correttamente");
 }
+
+
 
 
 
