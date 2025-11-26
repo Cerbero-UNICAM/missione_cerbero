@@ -254,7 +254,9 @@ int main()
 
         case 16:
             printf("\n--- Salva database su file binario ---\n");
-            // Qui implementerai il salvataggio
+            salva_libri_binario(ptr_libri, ctr_libri);
+            salva_prestiti_binario(ptr_prestiti, conta_prestiti);
+            salva_utenti_binario(ptr_utenti, conta_utenti);
             break;
 
         case 17:
@@ -1409,7 +1411,7 @@ void libri_più_prestati(libro *ptr_libri, int numero_libri, prestito *ptr_prest
 
 // 16 - stampa su file binario
 
-void salva_libri_binario(libro *libri, int numero_libri)
+void salva_libri_binario(libro *ptr_libri, int numero_libri)
 {
    
     if (numero_libri == 0)
@@ -1442,7 +1444,7 @@ void salva_libri_binario(libro *libri, int numero_libri)
 
    // salvo libri su libri.dat
 
-   flag = fwrite(libri, sizeof(libro), numero_libri, fp);
+   flag = fwrite(ptr_libri, sizeof(libro), numero_libri, fp);
 
    if (flag != numero_libri)
    {
@@ -1451,11 +1453,97 @@ void salva_libri_binario(libro *libri, int numero_libri)
 
    fclose(fp);
 }
+}
 
+void salva_prestiti_binario(prestito *ptr_prestiti, int numero_prestiti)
+{
+   
+    if (numero_prestiti == 0)
+    {
+        printf("Il catalogo prestiti è vuoto! Non vi è nulla da salvare.\n");
+        return;
+    }
+    else
+    {
+        FILE *fp;
 
+   fp = fopen("prestiti.dat", "wb"); 
+   size_t flag;
 
+   if(fp == NULL)
+   {
+    printf("Errore apertura file in scrittura!\n");
+    return;
+   }
+
+   // salvo numero di elementi in cima al file 
+
+   flag = fwrite(&numero_prestiti, sizeof(int), 1, fp); 
+
+   if (flag != 1 )
+   {
+    printf("Non è stato possibile salvare su file intero rappresentante il numero di prestiti!\n");
+    return; 
+   }
+
+   // salvo prestiti su prestiti.dat
+
+   flag = fwrite(ptr_prestiti, sizeof(prestito), numero_prestiti, fp);
+
+   if (flag != numero_prestiti)
+   {
+    printf("Il numero di elementi scritto sul file è pari a %zu invede di %d!\n", flag, numero_prestiti);
+   }
+
+   fclose(fp);
 
 }
+}
+void salva_utenti_binario(utente *ptr_utenti, int numero_utenti)
+{
+   
+    if (numero_utenti== 0)
+    {
+        printf("Il catalogo utenti è vuoto! Non vi è nulla da salvare.\n");
+        return;
+    }
+    else
+    {
+        FILE *fp;
+
+   fp = fopen("utenti.dat", "wb"); 
+   size_t flag;
+
+   if(fp == NULL)
+   {
+    printf("Errore apertura file in scrittura!\n");
+    return;
+   }
+
+   // salvo numero di elementi in cima al file 
+
+   flag = fwrite(&numero_utenti, sizeof(int), 1, fp); 
+
+   if (flag != 1 )
+   {
+    printf("Non è stato possibile salvare su file intero rappresentante il numero di utenti!\n");
+    return; 
+   }
+
+   // salvo utenti su utenti.dat
+
+   flag = fwrite(ptr_utenti, sizeof(utente), numero_utenti, fp);
+
+   if (flag != numero_utenti)
+   {
+    printf("Il numero di elementi scritto sul file è pari a %zu invede di %d!\n", flag, numero_utenti);
+   }
+
+   fclose(fp);
+
+}
+}
+
 
 void stampa_catalogo_file(libro *ptr, int n)
 {
