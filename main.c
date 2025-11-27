@@ -61,21 +61,21 @@ int n_volte_libro_prestato(libro *ptr_libro, prestito *ptr_prestiti, int numero_
 int indice_max(int *ptr, int numero_elementi);
 void libri_più_prestati(libro *ptr_libri, int numero_libri, prestito *ptr_prestiti, int numero_prestiti);
 
+void salva_libri_binario(libro *ptr_libri, int numero_libri);
+void salva_utenti_binario(utente *ptr_libri, int numero_utenti);
+void salva_prestiti_binario(prestito *ptr_libri, int numero_prestiti);
+int lettore_dimensione_file(const char *nome_file);
+void carica_database_libri(libro *ptr, int n);
+void carica_database_utenti(utente *ptr, int n);
+void carica_database_prestiti(prestito *ptr, int n);
 void stampa_catalogo_file(libro *ptr, int n);
+void esporta_report_prestiti(libro *ptr_libri, int conta_libri, utente *ptr_utenti, int conta_utenti, prestito *ptr_prestiti, int conta_prestiti);
 
 int main()
 {
     int scelta;
     int ctr_libri = 0;
-
-    // Apertura file binario per i libri in lettura scrittura
-    /*FILE *fp_libro;
-     size_t flag_libro;
-     fp_libro = fopen("libri.bin","r+b");  //controllo apertura file
-          if (fp_libro == NULL){
-              puts("errore apertura file libri");
-              return 1;
-          }*/
+    int dim_ptr2[3];
 
     // Inizializzazione (simulata)
     printf("=== SISTEMA GESTIONE BIBLIOTECA ===\n\n");
@@ -261,7 +261,38 @@ int main()
 
         case 17:
             printf("\n--- Carica database da file binario ---\n");
+            dim_ptr2[0] = lettore_dimensione_file("libri.dat");
+            dim_ptr2[1] = lettore_dimensione_file("prestiti.dat");
+            dim_ptr2[2] = lettore_dimensione_file("utenti.dat");
+            for (int k = 0; k < 3; k++)
+            { // se un file non è stato aperto correttamente esco dal case
+                if (dim_ptr2[k] == -1)
+                    break;
+            }
+            libro *ptr_libri2 = (libro *)malloc(dim_ptr2[0] * sizeof(libro)); // allocazione memoria per i nuovi array da caricare con relativa verifica
+            if (ptr_libri2 == NULL)
+            {
+                printf("Errore: memoria insufficiente!\n");
+                return -1;
+            }
 
+            prestito *ptr_prestiti2 = (prestito *)malloc(dim_ptr2[1] * sizeof(prestito));
+            if (ptr_prestiti2 == NULL)
+            {
+                printf("Errore: memoria insufficiente!\n");
+                return -1;
+            }
+
+            utente *ptr_utenti2 = (utente *)malloc(dim_ptr2[2] * sizeof(utente));
+            if (ptr_utenti2 == NULL)
+            {
+                printf("Errore: memoria insufficiente!\n");
+                return -1;
+            }
+
+            carica_database_libri(ptr_libri2, dim_ptr2[0]);
+            carica_database_prestiti(ptr_prestiti2, dim_ptr2[1]);
+            carica_database_utenti(ptr_utenti2, dim_ptr2[2]);
             break;
 
         case 18:
@@ -271,7 +302,7 @@ int main()
 
         case 19:
             printf("\n--- Esporta report prestiti in formato testo ---\n");
-            // Qui implementerai l'esportazione prestiti
+            esporta_report_prestiti(ptr_libri, ctr_libri, ptr_utenti, conta_utenti, ptr_prestiti, conta_prestiti);
             break;
 
         case 20:
@@ -300,33 +331,6 @@ int main()
 
     return 0;
 }
-
-int lettore_dimensione_file(const char *nome_file){
-    FILE* fp;
-    size_t flag;
-    int i;
-
-    fp = fopen(nome_file,"rb");
-    if (fp == NULL) {
-        printf("Impossibile aprire il file %s\n",nome_file);
-        return -1;
-    }
-
-    flag = fread(&i,sizeof(int),1,fp);
-    if (flag != 1){    //controllo che sia stato letto un elemento
-        printf("errore nella lettura del file %s\n",nome_file);
-        fclose(fp);
-        return -1;
-    }
-
-    fclose(fp);
-
-    return i;
-}
-
-
-
-
 
 // 1 inserisci nuovo libro
 
@@ -1434,13 +1438,13 @@ void libri_più_prestati(libro *ptr_libri, int numero_libri, prestito *ptr_prest
 
 // FINE SEZIONE D
 
-// INIZIO SEZIONE E 
+// INIZIO SEZIONE E
 
 // 16 - stampa su file binario
 
 void salva_libri_binario(libro *ptr_libri, int numero_libri)
 {
-   
+
     if (numero_libri == 0)
     {
         printf("Il catalogo libri è vuoto! Non vi è nulla da salvare.\n");
@@ -1450,40 +1454,40 @@ void salva_libri_binario(libro *ptr_libri, int numero_libri)
     {
         FILE *fp;
 
-   fp = fopen("libri.dat", "wb"); 
-   size_t flag;
+        fp = fopen("libri.dat", "wb");
+        size_t flag;
 
-   if(fp == NULL)
-   {
-    printf("Errore apertura file in scrittura!\n");
-    return;
-   }
+        if (fp == NULL)
+        {
+            printf("Errore apertura file in scrittura!\n");
+            return;
+        }
 
-   // salvo numero di elementi in cima al file 
+        // salvo numero di elementi in cima al file
 
-   flag = fwrite(&numero_libri, sizeof(int), 1, fp); 
+        flag = fwrite(&numero_libri, sizeof(int), 1, fp);
 
-   if (flag != 1 )
-   {
-    printf("Non è stato possibile salvare su file intero rappresentante il numero di libri!\n");
-    return; 
-   }
+        if (flag != 1)
+        {
+            printf("Non è stato possibile salvare su file intero rappresentante il numero di libri!\n");
+            return;
+        }
 
-   // salvo libri su libri.dat
+        // salvo libri su libri.dat
 
-   flag = fwrite(ptr_libri, sizeof(libro), numero_libri, fp);
+        flag = fwrite(ptr_libri, sizeof(libro), numero_libri, fp);
 
-   if (flag != numero_libri)
-   {
-    printf("Il numero di elementi scritto sul file è pari a %zu invede di %d!\n", flag, numero_libri); 
-   }
+        if (flag != numero_libri)
+        {
+            printf("Il numero di elementi scritto sul file è pari a %zu invede di %d!\n", flag, numero_libri);
+        }
 
-   fclose(fp);
-}
+        fclose(fp);
+    }
 }
 void salva_prestiti_binario(prestito *ptr_prestiti, int numero_prestiti)
 {
-   
+
     if (numero_prestiti == 0)
     {
         printf("Il catalogo prestiti è vuoto! Non vi è nulla da salvare.\n");
@@ -1493,42 +1497,41 @@ void salva_prestiti_binario(prestito *ptr_prestiti, int numero_prestiti)
     {
         FILE *fp;
 
-   fp = fopen("prestiti.dat", "wb"); 
-   size_t flag;
+        fp = fopen("prestiti.dat", "wb");
+        size_t flag;
 
-   if(fp == NULL)
-   {
-    printf("Errore apertura file in scrittura!\n");
-    return;
-   }
+        if (fp == NULL)
+        {
+            printf("Errore apertura file in scrittura!\n");
+            return;
+        }
 
-   // salvo numero di elementi in cima al file 
+        // salvo numero di elementi in cima al file
 
-   flag = fwrite(&numero_prestiti, sizeof(int), 1, fp); 
+        flag = fwrite(&numero_prestiti, sizeof(int), 1, fp);
 
-   if (flag != 1 )
-   {
-    printf("Non è stato possibile salvare su file intero rappresentante il numero di prestiti!\n");
-    return; 
-   }
+        if (flag != 1)
+        {
+            printf("Non è stato possibile salvare su file intero rappresentante il numero di prestiti!\n");
+            return;
+        }
 
-   // salvo prestiti su prestiti.dat
+        // salvo prestiti su prestiti.dat
 
-   flag = fwrite(ptr_prestiti, sizeof(prestito), numero_prestiti, fp);
+        flag = fwrite(ptr_prestiti, sizeof(prestito), numero_prestiti, fp);
 
-   if (flag != numero_prestiti)
-   {
-    printf("Il numero di elementi scritto sul file è pari a %zu invede di %d!\n", flag, numero_prestiti);
-   }
+        if (flag != numero_prestiti)
+        {
+            printf("Il numero di elementi scritto sul file è pari a %zu invede di %d!\n", flag, numero_prestiti);
+        }
 
-   fclose(fp);
-
-}
+        fclose(fp);
+    }
 }
 void salva_utenti_binario(utente *ptr_utenti, int numero_utenti)
 {
-   
-    if (numero_utenti== 0)
+
+    if (numero_utenti == 0)
     {
         printf("Il catalogo utenti è vuoto! Non vi è nulla da salvare.\n");
         return;
@@ -1537,39 +1540,37 @@ void salva_utenti_binario(utente *ptr_utenti, int numero_utenti)
     {
         FILE *fp;
 
-   fp = fopen("utenti.dat", "wb"); 
-   size_t flag;
+        fp = fopen("utenti.dat", "wb");
+        size_t flag;
 
-   if(fp == NULL)
-   {
-    printf("Errore apertura file in scrittura!\n");
-    return;
-   }
+        if (fp == NULL)
+        {
+            printf("Errore apertura file in scrittura!\n");
+            return;
+        }
 
-   // salvo numero di elementi in cima al file 
+        // salvo numero di elementi in cima al file
 
-   flag = fwrite(&numero_utenti, sizeof(int), 1, fp); 
+        flag = fwrite(&numero_utenti, sizeof(int), 1, fp);
 
-   if (flag != 1 )
-   {
-    printf("Non è stato possibile salvare su file intero rappresentante il numero di utenti!\n");
-    return; 
-   }
+        if (flag != 1)
+        {
+            printf("Non è stato possibile salvare su file intero rappresentante il numero di utenti!\n");
+            return;
+        }
 
-   // salvo utenti su utenti.dat
+        // salvo utenti su utenti.dat
 
-   flag = fwrite(ptr_utenti, sizeof(utente), numero_utenti, fp);
+        flag = fwrite(ptr_utenti, sizeof(utente), numero_utenti, fp);
 
-   if (flag != numero_utenti)
-   {
-    printf("Il numero di elementi scritto sul file è pari a %zu invede di %d!\n", flag, numero_utenti);
-   }
+        if (flag != numero_utenti)
+        {
+            printf("Il numero di elementi scritto sul file è pari a %zu invede di %d!\n", flag, numero_utenti);
+        }
 
-   fclose(fp);
-
+        fclose(fp);
+    }
 }
-}
-
 
 void stampa_catalogo_file(libro *ptr, int n)
 {
@@ -1590,9 +1591,106 @@ void stampa_catalogo_file(libro *ptr, int n)
     puts("File scritto correttamente");
 }
 
+int lettore_dimensione_file(const char *nome_file)
+{
+    FILE *fp;
+    size_t flag;
+    int i;
 
+    fp = fopen(nome_file, "rb");
+    if (fp == NULL)
+    {
+        printf("Impossibile aprire il file %s\n", nome_file);
+        return -1;
+    }
 
+    flag = fread(&i, sizeof(int), 1, fp);
+    if (flag != 1)
+    { // controllo che sia stato letto un elemento
+        printf("errore nella lettura del file %s\n", nome_file);
+        fclose(fp);
+        return -1;
+    }
 
+    fclose(fp);
+
+    return i;
+}
+
+void carica_database_libri(libro *ptr, int n)
+{
+    FILE *fp;
+    size_t flag;
+
+    fp = fopen("dati.dat", "rb");
+    if (fp == NULL)
+    {
+        printf("Impossibile aprire il file libri");
+        return;
+    }
+
+    fseek(fp, sizeof(int), SEEK_SET);
+    flag = fread(ptr, sizeof(libro), n, fp);
+
+    if (flag != n)
+    { // controllo lettura da file
+        puts("Errore nella lettura dei libri da file");
+        fclose(fp);
+        return;
+    }
+
+    fclose(fp);
+}
+
+void carica_database_utenti(utente *ptr, int n)
+{
+    FILE *fp;
+    size_t flag;
+
+    fp = fopen("utenti.dat", "rb");
+    if (fp == NULL)
+    {
+        printf("Impossibile aprire il file utenti");
+        return;
+    }
+
+    fseek(fp, sizeof(int), SEEK_SET);
+    flag = fread(ptr, sizeof(utente), n, fp);
+
+    if (flag != n)
+    { // controllo lettura da file
+        puts("Errore nella lettura degli utenti da file");
+        fclose(fp);
+        return;
+    }
+
+    fclose(fp);
+}
+
+void carica_database_prestiti(prestito *ptr, int n)
+{
+    FILE *fp;
+    size_t flag;
+
+    fp = fopen("prestiti.dat", "rb");
+    if (fp == NULL)
+    {
+        printf("Impossibile aprire il file prestiti");
+        return;
+    }
+
+    fseek(fp, sizeof(int), SEEK_SET);
+    flag = fread(ptr, sizeof(prestito), n, fp);
+
+    if (flag != n)
+    { // controllo lettura da file
+        puts("Errore nella lettura dei prestiti da file");
+        fclose(fp);
+        return;
+    }
+
+    fclose(fp);
+}
 
 // SCELTA 19
 
@@ -1647,5 +1745,5 @@ void esporta_report_prestiti(libro *ptr_libri, int conta_libri, utente *ptr_uten
 
     return;
 
-    // FINE SEZIONE E 
+    // FINE SEZIONE E
 }
