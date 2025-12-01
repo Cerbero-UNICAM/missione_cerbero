@@ -491,23 +491,30 @@ void cerca_libro_autore(libro *ptr, int n)
 
 void libri_disponibili_prestito(libro *ptr, int n)
 {
-    libro *ptr_temp[n - 1]; // creo un array di puntatori per non ordinare il puntatore originale
-    libro *temp;            // variabile d appoggio per bubble sort
+    libro *ptr_temp = (libro *)malloc(n * sizeof(libro));; // creo un array dinamico di puntatori per non ordinare il puntatore originale
+    libro temp;            // variabile d appoggio per bubble sort
+
+    if (ptr_temp == NULL) { //verifica su allocazione memoria
+        printf("Errore di allocazione memoria.\n");
+        return;
+    }
+
 
     for (int i = 0; i < n; i++)
     {
-        ptr_temp[i] = (ptr + i);
+        ptr_temp[i] = ptr[i];
     }
 
     for (int i = 0; i < n - 1; i++)
     { // bubble sort(strcmp resituisce > 0 se str1 è dopo str2)
         for (int j = 0; j < n - i - 1; j++)
         {
-            if (strcmp(ptr_temp[j]->titolo, ptr_temp[j + 1]->titolo) > 0)
+           if (strcmp(ptr_temp[j].titolo, ptr_temp[j+1].titolo) > 0)
             {
-                temp = ptr_temp[j]; // scambio gli indirizzi
-                ptr_temp[j] = ptr_temp[j + 1];
-                ptr_temp[j + 1] = temp;
+                // Scambio dei CONTENUTI (non degli indirizzi)
+                temp = ptr_temp[j];         // Salvo il libro j in temp
+                ptr_temp[j] = ptr_temp[j+1]; // Sposto il libro j+1 in j
+                ptr_temp[j+1] = temp;       // Metto quello salvato in j+1
             }
         }
     }
@@ -517,7 +524,7 @@ void libri_disponibili_prestito(libro *ptr, int n)
     { // stampo solo libri disponibili
         if ((ptr + k)->numero_copie > 0)
         {
-            printf("%s\n", ptr_temp[k]->titolo);
+            printf("%s\n", ptr_temp[k].titolo);
         }
     }
 }
