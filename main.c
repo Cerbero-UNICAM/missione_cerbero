@@ -463,7 +463,7 @@ void stampa_lista_libri(libro *ptr, int n)
         {
             len_titolo = temp1;
         }
-    } // segmentatio fault
+    }
     printf("%-18s | %-*s | %-*s | %-21s | %-13s | %-12s\n", "Codice ISBN", len_autore, "Autore", len_titolo, "Titolo", "Anno di pubblicazione", "Genere", "Numero copie");
     for (int j = 0; j < n; j++)
     {
