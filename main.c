@@ -586,7 +586,7 @@ void inserisci_utente(utente *ptr, int *ptr_num_utenti, int *ptr_capacità)
         {
             if (ptr[j].codice_utente == new_codice_utente)
             {
-                printf("Il codice utente %d e' gia' stato utilizzato! Inserirne uno diverso.\n", new_codice_utente);
+                printf("Il codice utente %d e' già stato utilizzato! Inserirne uno diverso.\n", new_codice_utente);
                 codice_valido = 0; // allora il codice non è valido
                 break;
             }
@@ -874,7 +874,7 @@ int input_utente(int *ptr_codUtente, utente *ptr_utenti, int *ind_utente, int co
     {
         printf("Input non valido! Inserire un numero.\n");
         int c;
-        while ((c = getchar()) != '\n' && c != EOF)
+        while ((c = getchar()) != '\n')
             ;
         return 0;
     }
@@ -991,7 +991,7 @@ void calcoladata(char *data)
     int giorni_mese[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
     // Aggiusta febbraio per anni bisestili
-    if ((anno % 4 == 0) && (anno % 100 != 0 || anno % 400 == 0))
+    if (mese == 2 && ((anno % 4 == 0) && (anno % 100 != 0 || anno % 400 == 0)))
         giorni_mese[1] = 29;
 
     // aggiungo 30 gg
@@ -1008,9 +1008,11 @@ void calcoladata(char *data)
             mese = 1; // torno a gennaio
             anno++;   // e passo all'anno successivo
         }
+
     }
 
     // sostituisco stringa data
+    
     sprintf(data, "%02d/%02d/%04d", giorno, mese, anno);
 }
 
@@ -1204,7 +1206,7 @@ int stampa_storico_utente(int cod, libro *ptr_libri, int conta_libri, utente *pt
             salva_nomeUtente(ptr_prestiti[i].codice_utente, ptr_utenti, conta_utenti, nome_utente);
 
             // Stampa formattata in stile Scelta 11
-            printf("----------------------------------\n");
+            printf("───────────────────────────────────────────────────────────\n");
             printf("CODICE PRESTITO: %d\n", ptr_prestiti[i].codice_prestito);
             printf("LIBRO:           %s\n", titolo);
             printf("UTENTE:          %s\n", nome_utente);
@@ -1220,7 +1222,7 @@ int stampa_storico_utente(int cod, libro *ptr_libri, int conta_libri, utente *pt
             {
                 printf("STATO:          IN PRESTITO\n");
             }
-            printf("----------------------------------\n\n");
+            printf("───────────────────────────────────────────────────────────\n\n");
 
             trovati++; // incremento trovati
         }
@@ -1433,7 +1435,7 @@ void libri_più_prestati(libro *ptr_libri, int numero_libri, prestito *ptr_prest
         if (num_prestiti_per_libro[temp] == 0) // gestisco caso in cui ho meno di 5 libri prestati
         {
             // non ha senso continuare a stampare se il numero di volte che è stato prestato il (j+1)-esimo libro più richiesto è pari a zero; dunque mi fermo
-            printf("Sono stati prestati solo %d in totale!\n", j);
+            printf("Sono stati prestati solo %d titoli diversi in totale!\n", j);
             break; // esce dal ciclo perchè tanto so che se continuassi con il ciclo otterei solo numeri di prestiti pari a zero
         }
         else
@@ -1448,7 +1450,6 @@ void libri_più_prestati(libro *ptr_libri, int numero_libri, prestito *ptr_prest
     free(num_prestiti_per_libro);
 }
 
-// aggiungere chiamate ai case nel main
 
 // FINE SEZIONE D
 
