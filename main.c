@@ -1639,7 +1639,7 @@ void carica_database_libri(libro *ptr, int n)
     FILE *fp;
     size_t flag;
 
-    fp = fopen("dati.dat", "rb");
+    fp = fopen("libri.dat", "rb");
     if (fp == NULL)
     {
         printf("Impossibile aprire il file libri");
