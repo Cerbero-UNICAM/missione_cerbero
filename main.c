@@ -38,7 +38,6 @@ void stampa_lista_libri(libro *ptr, int n);
 void cerca_libro_autore(libro *ptr, int n);
 char *stringa_maiuscolo(char *str);
 void libri_disponibili_prestito(libro *ptr, int n);
-// 6 - inserisci nuovo utente
 void inserisci_utente(utente *ptr, int *ptr_num_utenti, int *ptr_capacità);
 void visualizza_utenti(utente *ptr, int numero_utenti);
 void cerca_utente(utente *ptr, int numero_utenti);
@@ -60,7 +59,6 @@ void conteggio_libri(libro *ptr_libri, int numero_libri);
 int n_volte_libro_prestato(libro *ptr_libro, prestito *ptr_prestiti, int numero_prestiti);
 int indice_max(int *ptr, int numero_elementi);
 void libri_più_prestati(libro *ptr_libri, int numero_libri, prestito *ptr_prestiti, int numero_prestiti);
-
 void salva_libri_binario(libro *ptr_libri, int numero_libri);
 void salva_utenti_binario(utente *ptr_libri, int numero_utenti);
 void salva_prestiti_binario(prestito *ptr_libri, int numero_prestiti);
@@ -77,8 +75,10 @@ int main()
     int ctr_libri = 0;
     int conta_prestiti = 0; // contatore lunghezza del vettore prestiti
     int conta_utenti = 0;
-    int ctr_database = 0; //serve per sapere se siano stati caricati i dati dal database
-    int dim_ptr2[3];
+
+    // Questione data base sospesa 
+     int ctr_database = 0; //serve per sapere se siano stati caricati i dati dal database 
+     int dim_ptr2[3];
 
     // Inizializzazione (simulata)
     printf("=== SISTEMA GESTIONE BIBLIOTECA ===\n\n");
@@ -97,14 +97,14 @@ int main()
     if (ptr_libri == NULL)
     {
         printf("Errore: memoria insufficiente!\n");
-        return -1;
+        return 1;
     }
 
     utente *ptr_utenti = (utente *)malloc(caputenti * sizeof(utente));
     if (ptr_utenti == NULL)
     {
         printf("Errore: memoria insufficiente!\n");
-        return -1;
+        return 1;
     }
 
     // alloco strutture e controllo
@@ -112,7 +112,7 @@ int main()
     if (ptr_prestiti == NULL)
     {
         printf("Errore: memoria insufficiente!\n");
-        return -1;
+        return 1;
     }
 
     do
@@ -336,7 +336,7 @@ int main()
     return 0;
 }
 
-// 1 inserisci nuovo libro
+// 1 - inserisci nuovo libro
 
 void inserisci_libro(libro *ptr, int cap_libri, int *n)
 {
@@ -346,7 +346,7 @@ void inserisci_libro(libro *ptr, int cap_libri, int *n)
     int verifica_ISBN;
 
     if (k >= cap_libri)
-    { // controllo se posso inserier un altro libro
+    { // controllo se posso inserire un altro libro
         puts("spazio insufficiente, impossibile inserire un nuovo libro");
         return;
     }
@@ -373,8 +373,8 @@ void inserisci_libro(libro *ptr, int cap_libri, int *n)
     }
 
     printf("Titolo: ");
-    fgets((ptr + k)->titolo, sizeof((ptr + k)->titolo), stdin);
-    (ptr + k)->titolo[strcspn((ptr + k)->titolo, "\n")] = '\0';
+    fgets((ptr + k)->titolo, sizeof((ptr + k)->titolo), stdin); // input da tastiera salvato nella prima struct libera 
+    (ptr + k)->titolo[strcspn((ptr + k)->titolo, "\n")] = '\0'; // sostituisce newline con il carattere terminatore 
 
     printf("autore: ");
     fgets((ptr + k)->autore, sizeof((ptr + k)->autore), stdin);
@@ -432,11 +432,13 @@ void inserisci_libro(libro *ptr, int cap_libri, int *n)
     *n += 1; // incremento il counter dei libri salvati nel puntatore
 }
 
+// 3 - cerca libro per ISBN
+
 void cerca_libro_ISBN(libro *ptr, int n)
 {
     char temp[18];
 
-    printf("inserisci l ISBN da cercare(XXX-X-XXXX-XXXX-X): ");
+    printf("inserisci il codice ISBN da cercare(XXX-X-XXXX-XXXX-X): ");
     scanf("%s", temp);
     for (int i = 0; i < n; i++)
     {
@@ -448,6 +450,8 @@ void cerca_libro_ISBN(libro *ptr, int n)
     }
     printf("Nessun libro trovato");
 }
+
+// 2 - visualizza tutti i libri
 
 void stampa_lista_libri(libro *ptr, int n)
 {
@@ -475,6 +479,7 @@ void stampa_lista_libri(libro *ptr, int n)
     }
 }
 
+// 4 - cerca libri per autore 
 void cerca_libro_autore(libro *ptr, int n)
 {
     char str_temp0[51]; // immagazzino la stringa da ricercare
@@ -482,16 +487,19 @@ void cerca_libro_autore(libro *ptr, int n)
     puts("inserisci il nome dell autore da ricercare");
     scanf("%s", str_temp0);
     printf("i libri di %s sono: ", str_temp0);
+    stringa_maiuscolo(str_temp0); // normalizzo in maiuscolo nome autore inserito dall'utente 
     for (int i = 0; i < n; i++)
     {
         strcpy(str_temp1, (ptr + i)->autore); // copia autore in temp
-        stringa_maiuscolo(str_temp1);         // converto la copia in maiuscolo
+        stringa_maiuscolo(str_temp1);         // converto la copia in maiuscolo in modo da avere confronti coerenti 
         if (strcmp(str_temp1, str_temp0) == 0)
         { // confronto le due stringhe per tutti i libri
             printf("%s\n", (ptr + i)->titolo);
         }
     }
 }
+
+// 5 - libri disponibili per il prestito
 
 void libri_disponibili_prestito(libro *ptr, int n)
 {
@@ -505,6 +513,7 @@ void libri_disponibili_prestito(libro *ptr, int n)
         return;
     }
 
+    // effettuo copia degli elementi dell'array input nell'array apposito da ordinare
     for (int i = 0; i < n; i++)
     {
         ptr_temp[i] = ptr[i];
@@ -527,7 +536,7 @@ void libri_disponibili_prestito(libro *ptr, int n)
     puts("libri disponibili per il prestito");
     for (int k = 0; k < n; k++)
     { // stampo solo libri disponibili
-        if ((ptr + k)->numero_copie > 0)
+        if ((ptr_temp + k)->numero_copie > 0)
         {
             printf("%s\n", ptr_temp[k].titolo);
         }
@@ -563,13 +572,13 @@ void inserisci_utente(utente *ptr, int *ptr_num_utenti, int *ptr_capacità)
         {
             printf("Input non valido! Inserisci un numero intero per il codice.\n");
             // Pulizia buffer
-            while ((c = getchar()) != '\n' && c != EOF)
+            while ((c = getchar()) != '\n')
                 ;
-            continue;
+            continue; // continue sul do-while che richiede di nuovo all'utente di inserire un codice utente che sia un numero intero
         }
 
         // Pulizia buffer dopo scanf %d
-        while ((c = getchar()) != '\n' && c != EOF)
+        while ((c = getchar()) != '\n')
             ;
 
         int codice_valido = 1; // assumo che codice utente sia valido
@@ -584,7 +593,7 @@ void inserisci_utente(utente *ptr, int *ptr_num_utenti, int *ptr_capacità)
         }
         if (codice_valido)
         {
-            break;
+            break; // esce dal do-while perchè il codice è valido (mai stato usato); altrimenti continua a ciclare chiedendo ancora all'utente un altro inserimento
         }
     } while (1);
 
@@ -592,7 +601,7 @@ void inserisci_utente(utente *ptr, int *ptr_num_utenti, int *ptr_capacità)
     printf("Inserire nome: ");
     scanf("%50s", new_nome);
     // Pulizia buffer
-    while ((c = getchar()) != '\n' && c != EOF)
+    while ((c = getchar()) != '\n')
         ;
 
     // 3. INPUT COGNOME
@@ -610,7 +619,7 @@ void inserisci_utente(utente *ptr, int *ptr_num_utenti, int *ptr_capacità)
         printf("Inserire email (deve contenere la '@'): ");
         scanf("%80s", new_email);
         // Pulizia buffer
-        while ((c = getchar()) != '\n' && c != EOF)
+        while ((c = getchar()) != '\n')
             ;
 
         if (strchr(new_email, '@') != NULL)
@@ -621,7 +630,7 @@ void inserisci_utente(utente *ptr, int *ptr_num_utenti, int *ptr_capacità)
         if (!email_valida)
             printf("Nell'indirizzo inserito non compare la '@'! Riprova.\n");
 
-    } while (!email_valida);
+    } while (!email_valida); // se nell'email inserita non compare '@' allora viene chiesto un nuovo tentativo all'utente
 
     // 5. INPUT DATA ISCRIZIONE (Con controllo formato is_data)
     do
@@ -629,19 +638,19 @@ void inserisci_utente(utente *ptr, int *ptr_num_utenti, int *ptr_capacità)
         printf("Inserire data di iscrizione (formato gg/mm/aaaa): ");
         scanf("%10s", new_data_iscrizione);
         // Pulizia buffer
-        while ((c = getchar()) != '\n' && c != EOF)
+        while ((c = getchar()) != '\n')
             ;
 
-        // Assumendo che is_data sia implementata per validare il formato
+        // controllo che la data inserita sia valida 
         if (is_data(new_data_iscrizione))
         {
-            break;
+            break; // termina il ciclo esterno perchè la data inserita è valida 
         }
         else
         {
             printf("Formato data non valido. Inserire gg/mm/aaaa corretto.\n");
         }
-    } while (1);
+    } while (1); 
 
     // SALVATAGGIO DATI NELLA STRUTTURA
     int k = *ptr_num_utenti;
@@ -651,7 +660,7 @@ void inserisci_utente(utente *ptr, int *ptr_num_utenti, int *ptr_capacità)
     strcpy(ptr[k].email, new_email);
     strcpy(ptr[k].data_iscrizione, new_data_iscrizione);
 
-    *ptr_num_utenti += 1;
+    *ptr_num_utenti += 1; // aggiorno contatore per successiva registrazione un utente 
 
     printf("\nRegistrazione del nuovo utente avvenuta con successo! Codice: %d\n", new_codice_utente);
 }
@@ -668,6 +677,8 @@ void visualizza_utenti(utente *ptr, int numero_utenti)
     else
     {
         printf("%-15s %-50s %-50s %-80s %-20s\n", "Codice utente", "Nome", "Cognome", "Email", "Data di iscrizione");
+        printf("\n");
+
         for (int i = 0; i < numero_utenti; i++)
         {
             printf("%d %-50s %-50s %-80s %-10s\n", ptr[i].codice_utente, ptr[i].nome, ptr[i].cognome, ptr[i].email, ptr[i].data_iscrizione);
@@ -692,7 +703,7 @@ void cerca_utente(utente *ptr, int numero_utenti)
             printf("%-15s %-50s %-50s %-80s %-20s\n", "Codice utente", "Nome", "Cognome", "Email", "Data di iscrizione");
             printf("%d %-50s %-50s %-80s %-10s\n", ptr[i].codice_utente, ptr[i].nome, ptr[i].cognome, ptr[i].email, ptr[i].data_iscrizione);
             trovato = 1; // confermo la corrispondenza, dunque aggiorno valore trovato
-            break;
+            break; // per univocità codice utente posso direttamente concludere la ricerca; NON può esserci altro utente a cui è associato codice inserito 
         }
     }
 
@@ -775,7 +786,7 @@ int input_ISBN(char *ptr_ISBN, libro *ptr_libri, int *ind_libro, int conta_libri
 
     // pulizia buffer
     int c;
-    while ((c = getchar()) != '\n' && c != EOF)
+    while ((c = getchar()) != '\n')
         ;
 
     // valido input
@@ -916,6 +927,7 @@ void input_data(char *ptr_data)
     // data valida
 }
 
+// verifica che la data sia nel formato valido e che abbia senso
 int is_data(char *data)
 {
     // Verifica lunghezza
@@ -930,14 +942,14 @@ int is_data(char *data)
     {
         if (!isdigit(data[posizioni_cifre[i]]))
         {
-            return 0;
+            return 0; // non vi sono cifre dove dovrebbero esserci 
         }
     }
 
     // Verifica che le posizioni siano slash
     if (data[2] != '/' || data[5] != '/')
     {
-        return 0;
+        return 0; // formato non è valido
     }
 
     // Estrai giorno, mese, anno
@@ -948,9 +960,9 @@ int is_data(char *data)
 
     // Validazione logica della data
     if (mese < 1 || mese > 12)
-        return 0;
+        return 0; // il mese inserito non esiste; non ha senso
     if (giorno < 1)
-        return 0;
+        return 0; // il giorno inserito non può essere negativo; non ha senso
 
     // Giorni per mese
     int giorni_mese[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
@@ -961,13 +973,12 @@ int is_data(char *data)
 
     // Controllo giorno massimo
     if (giorno > giorni_mese[mese - 1])
-        return 0;
+        return 0; 
 
     return 1;
 }
-// fine input_data
 
-// inizio calcoladata
+// calcolo data di restituzione
 void calcoladata(char *data)
 {
     // Estrai giorno, mese, anno
@@ -986,7 +997,7 @@ void calcoladata(char *data)
     // aggiungo 30 gg
     giorno += 30;
 
-    // aggiusto data
+    // aggiusto data 
     while (giorno > giorni_mese[mese - 1]) // finché ho troppi giorni per il mese corrente...
     {
         giorno -= giorni_mese[mese - 1]; // gli sottraggo i giorni del mese corrente
@@ -1002,7 +1013,6 @@ void calcoladata(char *data)
     // sostituisco stringa data
     sprintf(data, "%02d/%02d/%04d", giorno, mese, anno);
 }
-// fine calcoladata
 
 // FINE SCELTA 9
 
