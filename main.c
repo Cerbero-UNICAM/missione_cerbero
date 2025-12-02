@@ -997,13 +997,6 @@ void calcoladata(char *data)
             mese = 1; // torno a gennaio
             anno++;   // e passo all'anno successivo
         }
-
-        // ricalcolo i giorni di febbraio a seconda che l'anno corrente sia bisestile oppure no
-        giorni_mese[1] = 28;
-        if (mese == 2 && (anno % 4 == 0) && (anno % 100 != 0 || anno % 400 == 0))
-        {
-            giorni_mese[1] = 29;
-        }
     }
 
     // sostituisco stringa data
