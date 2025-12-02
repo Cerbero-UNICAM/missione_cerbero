@@ -367,7 +367,7 @@ void inserisci_libro(libro *ptr, int cap_libri, int *n)
     {
         if (strcmp((ptr + k)->codice_ISBN, (ptr + i)->codice_ISBN) == 0)
         { // controllo unicità ISBN
-            puts("l ISBN è uguale ad un libro gia esistente");
+            puts("l ISBN e' uguale ad un libro gia esistente");
             return;
         }
     }

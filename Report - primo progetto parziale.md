@@ -462,7 +462,7 @@ Durante lo sviluppo sono state affrontate diverse sfide tecniche:
 
 ### Possibili Miglioramenti Futuri
 Per versioni future del software, si ipotizzano le seguenti implementazioni:
-* **Funzionalità di Cancellazione**: Aggiungere la possibilità di rimuovere libri o utenti obsoleti (attualmente non richiesto dalle specifiche).
+* **Funzionalità di Cancellazione**: Aggiungere la possibilità di rimuovere libri o utenti obsoleti.
 * **Modifica Dati**: Permettere la correzione di dati inseriti erroneamente (es. correggere un titolo o un cognome).
 * **Ordinamento Avanzato**: Sostituire l'algoritmo di ordinamento attuale (Bubble Sort) con algoritmi più efficienti come Quicksort per gestire grandi volumi di dati.
 
