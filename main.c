@@ -367,7 +367,7 @@ void inserisci_libro(libro *ptr, int cap_libri, int *n)
     {
         if (strcmp((ptr + k)->codice_ISBN, (ptr + i)->codice_ISBN) == 0)
         { // controllo unicità ISBN
-            puts("l ISBN è uguale ad un libro gia esistente");
+            puts("l ISBN e' uguale ad un libro gia esistente");
             return;
         }
     }
@@ -1095,13 +1095,13 @@ void visualizza_prestiti_attivi(libro *ptr_libri, int conta_libri, utente *ptr_u
             salva_nomeUtente(ptr_prestiti[i].codice_utente, ptr_utenti, conta_utenti, nome_utente);
 
             // Stampa formattata
-            printf("───────────────────────────────────────────────────────────\n");
+            printf("----------------------------------\n");
             printf("CODICE PRESTITO: %d\n", ptr_prestiti[i].codice_prestito);
             printf("LIBRO:           %s\n", titolo);
             printf("UTENTE:          %s\n", nome_utente);
             printf("DATA PRESTITO:   %s\n", ptr_prestiti[i].data_prestito);
             printf("RESTITUZIONE:    %s\n", ptr_prestiti[i].data_restituzione);
-            printf("───────────────────────────────────────────────────────────\n\n");
+            printf("----------------------------------\n\n");
 
             trovati++; // incremento trovati
         }
@@ -1206,7 +1206,7 @@ int stampa_storico_utente(int cod, libro *ptr_libri, int conta_libri, utente *pt
             salva_nomeUtente(ptr_prestiti[i].codice_utente, ptr_utenti, conta_utenti, nome_utente);
 
             // Stampa formattata in stile Scelta 11
-            printf("───────────────────────────────────────────────────────────\n");
+            printf("----------------------------------\n");
             printf("CODICE PRESTITO: %d\n", ptr_prestiti[i].codice_prestito);
             printf("LIBRO:           %s\n", titolo);
             printf("UTENTE:          %s\n", nome_utente);
@@ -1222,7 +1222,7 @@ int stampa_storico_utente(int cod, libro *ptr_libri, int conta_libri, utente *pt
             {
                 printf("STATO:          IN PRESTITO\n");
             }
-            printf("───────────────────────────────────────────────────────────\n\n");
+            printf("----------------------------------\n\n");
 
             trovati++; // incremento trovati
         }
@@ -1743,7 +1743,7 @@ void esporta_report_prestiti(libro *ptr_libri, int conta_libri, utente *ptr_uten
             fprintf(fp, "NOME UTENTE:          %s\n", nome_utente);
             fprintf(fp, "DATA PRESTITO:   %s\n", ptr_prestiti[i].data_prestito);
             fprintf(fp, "RESTITUZIONE:    %s\n", ptr_prestiti[i].data_restituzione);
-            fprintf(fp, "───────────────────────────────────────────────────────────\n\n");
+            fprintf(fp, "----------------------------------\n\n");
 
             trovati++; // incremento trovati
         }
