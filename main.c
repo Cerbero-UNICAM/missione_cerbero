@@ -1000,9 +1000,7 @@ void calcoladata(char *data)
     }
 
     // sostituisco stringa data
-    char output[11];
-    sprintf(output, "%02d/%02d/%04d", giorno, mese, anno);
-    strcpy(data, output);
+    sprintf(data, "%02d/%02d/%04d", giorno, mese, anno);
 }
 // fine calcoladata
 
