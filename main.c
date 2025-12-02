@@ -392,7 +392,7 @@ void inserisci_libro(libro *ptr, int cap_libri, int *n)
 
     printf("numero copie: ");
     scanf("%d", &((ptr + k)->numero_copie));
-    while ((ptr + k)->numero_copie < 0)
+    while ((ptr + k)->numero_copie <= 0)
     {
         printf("numero copie non valido, inserire un numero maggiore di 0: ");
         scanf("%d", &((ptr + k)->numero_copie));
