@@ -577,7 +577,7 @@ void inserisci_utente(utente *ptr, int *ptr_num_utenti, int *ptr_capacità)
         {
             if (ptr[j].codice_utente == new_codice_utente)
             {
-                printf("Il codice utente %d è già stato utilizzato! Inserirne uno diverso.\n", new_codice_utente);
+                printf("Il codice utente %d e' già stato utilizzato! Inserirne uno diverso.\n", new_codice_utente);
                 codice_valido = 0; // allora il codice non è valido
                 break;
             }

@@ -1,3 +1,5 @@
-ISBN: 111-1-1111-1111-1 | Titolo: uno nessuno centomila | Autore: pirandell+l | Anno: 2000 | Copie: 20 | Genere: CLASSICO
-ISBN: 222-2-2222-2222-2 | Titolo: il nome del vento | Autore: patrik toutfois | Anno: 1943 | Copie: 122 | Genere: FANTASY
-ISBN: 333-3-3333-3333-3 | Titolo: stellaris | Autore: stanislae lem | Anno: 2003 | Copie: 1 | Genere: FANTASCIENZA
+ISBN: 111-1-1111-1111-1 | Titolo: Uno nessuno e centomila | Autore: Pirandello | Anno: 2000 | Copie: 20 | Genere: CLASSICO
+ISBN: 222-2-2222-2222-2 | Titolo: Il signore degli anelli | Autore: tolkien | Anno: 1980 | Copie: 1 | Genere: FANTASY
+ISBN: 333-3-3333-3333-3 | Titolo: Stellaris | Autore: Lem | Anno: 1999 | Copie: 10 | Genere: FANTASCIENZA
+ISBN: 444-4-4444-4444-4 | Titolo: L' uomo che guardava passare i treni | Autore: simenon | Anno: 1987 | Copie: 13 | Genere: GIALLO
+ISBN: 555-5-5555-5555-5 | Titolo: Il nome della rosa | Autore: Eco | Anno: 1980 | Copie: 14 | Genere: ROMANZO
