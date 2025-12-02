@@ -786,7 +786,7 @@ int input_ISBN(char *ptr_ISBN, libro *ptr_libri, int *ind_libro, int conta_libri
 
     // pulizia buffer
     int c;
-    while ((c = getchar()) != '\n' && c != EOF)
+    while ((c = getchar()) != '\n')
         ;
 
     // valido input
@@ -927,6 +927,7 @@ void input_data(char *ptr_data)
     // data valida
 }
 
+// verifica che la data sia nel formato valido e che abbia senso
 int is_data(char *data)
 {
     // Verifica lunghezza
@@ -941,14 +942,14 @@ int is_data(char *data)
     {
         if (!isdigit(data[posizioni_cifre[i]]))
         {
-            return 0;
+            return 0; // non vi sono cifre dove dovrebbero esserci 
         }
     }
 
     // Verifica che le posizioni siano slash
     if (data[2] != '/' || data[5] != '/')
     {
-        return 0;
+        return 0; // formato non è valido
     }
 
     // Estrai giorno, mese, anno
@@ -959,9 +960,9 @@ int is_data(char *data)
 
     // Validazione logica della data
     if (mese < 1 || mese > 12)
-        return 0;
+        return 0; // il mese inserito non esiste; non ha senso
     if (giorno < 1)
-        return 0;
+        return 0; // il giorno inserito non può essere negativo; non ha senso
 
     // Giorni per mese
     int giorni_mese[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
@@ -972,13 +973,12 @@ int is_data(char *data)
 
     // Controllo giorno massimo
     if (giorno > giorni_mese[mese - 1])
-        return 0;
+        return 0; 
 
     return 1;
 }
-// fine input_data
 
-// inizio calcoladata
+// calcolo data di restituzione
 void calcoladata(char *data)
 {
     // Estrai giorno, mese, anno
@@ -991,13 +991,13 @@ void calcoladata(char *data)
     int giorni_mese[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
     // Aggiusta febbraio per anni bisestili
-    if ((anno % 4 == 0) && (anno % 100 != 0 || anno % 400 == 0))
+    if (mese == 2 && ((anno % 4 == 0) && (anno % 100 != 0 || anno % 400 == 0)))
         giorni_mese[1] = 29;
 
     // aggiungo 30 gg
     giorno += 30;
 
-    // aggiusto data
+    // aggiusto data 
     while (giorno > giorni_mese[mese - 1]) // finché ho troppi giorni per il mese corrente...
     {
         giorno -= giorni_mese[mese - 1]; // gli sottraggo i giorni del mese corrente
@@ -1008,12 +1008,13 @@ void calcoladata(char *data)
             mese = 1; // torno a gennaio
             anno++;   // e passo all'anno successivo
         }
+
     }
 
     // sostituisco stringa data
+    
     sprintf(data, "%02d/%02d/%04d", giorno, mese, anno);
 }
-// fine calcoladata
 
 // FINE SCELTA 9
 
