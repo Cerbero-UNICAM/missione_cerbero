@@ -75,6 +75,9 @@ int main()
 {
     int scelta;
     int ctr_libri = 0;
+    int conta_prestiti = 0; // contatore lunghezza del vettore prestiti
+    int conta_utenti = 0;
+    int ctr_database = 0; //serve per sapere se siano stati caricati i dati dal database
     int dim_ptr2[3];
 
     // Inizializzazione (simulata)
@@ -111,8 +114,6 @@ int main()
         printf("Errore: memoria insufficiente!\n");
         return -1;
     }
-    int conta_prestiti = 0; // contatore lunghezza del vettore prestiti
-    int conta_utenti = 0;
 
     do
     {
@@ -293,6 +294,9 @@ int main()
             carica_database_libri(ptr_libri2, dim_ptr2[0]);
             carica_database_prestiti(ptr_prestiti2, dim_ptr2[1]);
             carica_database_utenti(ptr_utenti2, dim_ptr2[2]);
+            free(ptr_libri2);
+            free(ptr_prestiti2);
+            free(ptr_utenti2);
             break;
 
         case 18:
