@@ -980,7 +980,7 @@ void calcoladata(char *data)
     int giorni_mese[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
     // Aggiusta febbraio per anni bisestili
-    if (mese == 2 && ((anno % 4 == 0) && (anno % 100 != 0 || anno % 400 == 0)))
+    if ((anno % 4 == 0) && (anno % 100 != 0 || anno % 400 == 0))
         giorni_mese[1] = 29;
 
     // aggiungo 30 gg
