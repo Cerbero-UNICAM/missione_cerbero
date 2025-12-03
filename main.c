@@ -288,7 +288,7 @@ int main()
             puts("Memoria insufficiente,allocare piu' memoria per la capacita' prestiti!");
            }
            else {
-            carica_database_prestiti(ptr_utenti, dim_file[2],conta_prestiti);
+            carica_database_prestiti(ptr_prestiti, dim_file[2],conta_prestiti);
            }
 
             break;
