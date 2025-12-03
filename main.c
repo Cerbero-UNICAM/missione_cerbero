@@ -63,9 +63,9 @@ void salva_libri_binario(libro *ptr_libri, int numero_libri);
 void salva_utenti_binario(utente *ptr_libri, int numero_utenti);
 void salva_prestiti_binario(prestito *ptr_libri, int numero_prestiti);
 int lettore_dimensione_file(const char *nome_file);
-void carica_database_libri(libro *ptr, int n);
-void carica_database_utenti(utente *ptr, int n);
-void carica_database_prestiti(prestito *ptr, int n);
+void carica_database_libri(libro *ptr, int dim_file,int n);
+void carica_database_utenti(utente *ptr, int dim_file,int n);
+void carica_database_prestiti(prestito *ptr, int dim_file,int n);
 void stampa_catalogo_file(libro *ptr, int n);
 void esporta_report_prestiti(libro *ptr_libri, int conta_libri, utente *ptr_utenti, int conta_utenti, prestito *ptr_prestiti, int conta_prestiti);
 
@@ -75,12 +75,9 @@ int main()
     int ctr_libri = 0;
     int conta_prestiti = 0; // contatore lunghezza del vettore prestiti
     int conta_utenti = 0;
+    int dim_file[3];
 
-    // Questione data base sospesa 
-     int ctr_database = 0; //serve per sapere se siano stati caricati i dati dal database 
-     int dim_ptr2[3];
-
-    // Inizializzazione (simulata)
+    // scelta dimensioni array
     printf("=== SISTEMA GESTIONE BIBLIOTECA ===\n\n");
     printf("Inserisci capacita' massima libri: ");
     int caplibri;
@@ -93,6 +90,7 @@ int main()
     scanf("%d", &capprestiti);
     printf("Database inizializzato correttamente!\n\n");
 
+    //inizializzazione dei 3 array con relativi controlli
     libro *ptr_libri = (libro *)malloc(caplibri * sizeof(libro));
     if (ptr_libri == NULL)
     {
@@ -107,7 +105,6 @@ int main()
         return 1;
     }
 
-    // alloco strutture e controllo
     prestito *ptr_prestiti = (prestito *)malloc(capprestiti * sizeof(prestito));
     if (ptr_prestiti == NULL)
     {
@@ -258,45 +255,42 @@ int main()
             salva_libri_binario(ptr_libri, ctr_libri);
             salva_prestiti_binario(ptr_prestiti, conta_prestiti);
             salva_utenti_binario(ptr_utenti, conta_utenti);
+            puts("Caricamento su file andato a buon fine!");
             break;
 
         case 17:
             printf("\n--- Carica database da file binario ---\n");
-            dim_ptr2[0] = lettore_dimensione_file("libri.dat");
-            dim_ptr2[1] = lettore_dimensione_file("prestiti.dat");
-            dim_ptr2[2] = lettore_dimensione_file("utenti.dat");
+            dim_file[0] = lettore_dimensione_file("libri.dat");
+            dim_file[1] = lettore_dimensione_file("utenti.dat");
+            dim_file[2] = lettore_dimensione_file("prestiti.dat");
+           
             for (int k = 0; k < 3; k++)
             { // se un file non è stato aperto correttamente esco dal case
-                if (dim_ptr2[k] == -1)
+                if (dim_file[k] == -1)
                     break;
             }
-            libro *ptr_libri2 = (libro *)malloc(dim_ptr2[0] * sizeof(libro)); // allocazione memoria per i nuovi array da caricare con relativa verifica
-            if (ptr_libri2 == NULL)
-            {
-                printf("Errore: memoria insufficiente!\n");
-                return -1;
-            }
 
-            prestito *ptr_prestiti2 = (prestito *)malloc(dim_ptr2[1] * sizeof(prestito));
-            if (ptr_prestiti2 == NULL)
-            {
-                printf("Errore: memoria insufficiente!\n");
-                return -1;
-            }
+           if ((dim_file[0] + ctr_libri) > caplibri){
+            puts("Memoria insufficiente,allocare piu' memoria per la capacita' libri!");
+           }
+           else {
+             carica_database_libri(ptr_libri, dim_file[0],ctr_libri);
+           }
 
-            utente *ptr_utenti2 = (utente *)malloc(dim_ptr2[2] * sizeof(utente));
-            if (ptr_utenti2 == NULL)
-            {
-                printf("Errore: memoria insufficiente!\n");
-                return -1;
-            }
+           if ((dim_file[1] + conta_utenti) > capprestiti){
+            puts("Memoria insufficiente,allocare piu' memoria per la capacita' utenti!");
+           }
+           else {
+            carica_database_utenti(ptr_utenti, dim_file[1],conta_utenti);
+           }
 
-            carica_database_libri(ptr_libri2, dim_ptr2[0]);
-            carica_database_prestiti(ptr_prestiti2, dim_ptr2[1]);
-            carica_database_utenti(ptr_utenti2, dim_ptr2[2]);
-            free(ptr_libri2);
-            free(ptr_prestiti2);
-            free(ptr_utenti2);
+            if ((dim_file[1] + conta_utenti) > capprestiti){
+            puts("Memoria insufficiente,allocare piu' memoria per la capacita' prestiti!");
+           }
+           else {
+            carica_database_prestiti(ptr_utenti, dim_file[2],conta_prestiti);
+           }
+
             break;
 
         case 18:
@@ -355,14 +349,15 @@ void inserisci_libro(libro *ptr, int cap_libri, int *n)
 
     printf("codice ISBN(XXX-X-XXXX-XXXX-X): "); // inserimento informazioni libro
     scanf("%s", (ptr + k)->codice_ISBN);
-    verifica_ISBN = is_ISBN((ptr + k)->codice_ISBN); // verifica formato ISBN
+    verifica_ISBN = is_ISBN((ptr + k)->codice_ISBN); // verifica formato ISBN ritorna 0 se il formato non è valido
     if (verifica_ISBN == 0)
     {
         puts("Formato non valido");
         return;
     }
     while ((c = getchar()) != '\n')
-        ; // pulire stdin
+    ; // pulire stdin
+
     for (int i = 0; i < k; i++)
     {
         if (strcmp((ptr + k)->codice_ISBN, (ptr + i)->codice_ISBN) == 0)
@@ -382,7 +377,7 @@ void inserisci_libro(libro *ptr, int cap_libri, int *n)
 
     printf("anno di pubblicazione: ");
     scanf("%d", &(ptr + k)->anno_pubblicazione);
-    while ((ptr + k)->anno_pubblicazione < 1800 || (ptr + k)->anno_pubblicazione > 2025)
+    while ((ptr + k)->anno_pubblicazione < 1800 || (ptr + k)->anno_pubblicazione > 2025) //verifica sull'anno inserito
     {
         printf("anno non valido, inserire un anno tra il 1800 e il 2025: ");
         scanf("%d", &((ptr + k)->anno_pubblicazione));
@@ -436,7 +431,7 @@ void inserisci_libro(libro *ptr, int cap_libri, int *n)
 
 void cerca_libro_ISBN(libro *ptr, int n)
 {
-    char temp[18];
+    char temp[18]; 
 
     printf("inserisci il codice ISBN da cercare(XXX-X-XXXX-XXXX-X): ");
     scanf("%s", temp);
@@ -1634,7 +1629,7 @@ int lettore_dimensione_file(const char *nome_file)
     return i;
 }
 
-void carica_database_libri(libro *ptr, int n)
+void carica_database_libri(libro *ptr, int dim_file,int n) // n è il numero di elementi gia salvati sul puntatore
 {
     FILE *fp;
     size_t flag;
@@ -1642,14 +1637,14 @@ void carica_database_libri(libro *ptr, int n)
     fp = fopen("libri.dat", "rb");
     if (fp == NULL)
     {
-        printf("Impossibile aprire il file libri");
+        puts("Impossibile aprire il file libri");
         return;
     }
 
-    fseek(fp, sizeof(int), SEEK_SET);
-    flag = fread(ptr, sizeof(libro), n, fp);
+    fseek(fp, sizeof(int), SEEK_SET);  // skippo il primo numero intero
+    flag = fread((ptr+n), sizeof(libro), dim_file, fp);
 
-    if (flag != n)
+    if (flag != dim_file)
     { // controllo lettura da file
         puts("Errore nella lettura dei libri da file");
         fclose(fp);
@@ -1659,7 +1654,7 @@ void carica_database_libri(libro *ptr, int n)
     fclose(fp);
 }
 
-void carica_database_utenti(utente *ptr, int n)
+void carica_database_utenti(utente *ptr, int dim_file,int n)
 {
     FILE *fp;
     size_t flag;
@@ -1672,9 +1667,9 @@ void carica_database_utenti(utente *ptr, int n)
     }
 
     fseek(fp, sizeof(int), SEEK_SET);
-    flag = fread(ptr, sizeof(utente), n, fp);
+    flag = fread((ptr+n), sizeof(utente), dim_file, fp);
 
-    if (flag != n)
+    if (flag != dim_file)
     { // controllo lettura da file
         puts("Errore nella lettura degli utenti da file");
         fclose(fp);
@@ -1684,7 +1679,7 @@ void carica_database_utenti(utente *ptr, int n)
     fclose(fp);
 }
 
-void carica_database_prestiti(prestito *ptr, int n)
+void carica_database_prestiti(prestito *ptr,int dim_file,int n)
 {
     FILE *fp;
     size_t flag;
@@ -1697,9 +1692,9 @@ void carica_database_prestiti(prestito *ptr, int n)
     }
 
     fseek(fp, sizeof(int), SEEK_SET);
-    flag = fread(ptr, sizeof(prestito), n, fp);
+    flag = fread((ptr+n), sizeof(prestito), dim_file, fp);
 
-    if (flag != n)
+    if (flag != dim_file)
     { // controllo lettura da file
         puts("Errore nella lettura dei prestiti da file");
         fclose(fp);
