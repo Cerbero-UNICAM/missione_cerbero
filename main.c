@@ -63,9 +63,9 @@ void salva_libri_binario(libro *ptr_libri, int numero_libri);
 void salva_utenti_binario(utente *ptr_libri, int numero_utenti);
 void salva_prestiti_binario(prestito *ptr_libri, int numero_prestiti);
 int lettore_dimensione_file(const char *nome_file);
-void carica_database_libri(libro *ptr, int dim_file,int n);
-void carica_database_utenti(utente *ptr, int dim_file,int n);
-void carica_database_prestiti(prestito *ptr, int dim_file,int n);
+void carica_database_libri(libro *ptr, int dim_file,int* ctr_libri);
+void carica_database_utenti(utente *ptr, int dim_file,int* ctr_utenti);
+void carica_database_prestiti(prestito *ptr, int dim_file,int* ctr_prestiti);
 void stampa_catalogo_file(libro *ptr, int n);
 void esporta_report_prestiti(libro *ptr_libri, int conta_libri, utente *ptr_utenti, int conta_utenti, prestito *ptr_prestiti, int conta_prestiti);
 
@@ -267,14 +267,15 @@ int main()
             for (int k = 0; k < 3; k++)
             { // se un file non è stato aperto correttamente esco dal case
                 if (dim_file[k] == -1)
-                    break;
+                puts("apertura file non riuscita");
+                break;
             }
 
            if ((dim_file[0] + ctr_libri) > caplibri){
             puts("Memoria insufficiente,allocare piu' memoria per la capacita' libri!");
            }
            else {
-             carica_database_libri(ptr_libri, dim_file[0],ctr_libri);
+             carica_database_libri(ptr_libri, dim_file[0],&ctr_libri);
              puts("caricamento da file libri andato a buon fine!");
            }
 
@@ -282,7 +283,7 @@ int main()
             puts("Memoria insufficiente,allocare piu' memoria per la capacita' utenti!");
            }
            else {
-            carica_database_utenti(ptr_utenti, dim_file[1],conta_utenti);
+            carica_database_utenti(ptr_utenti, dim_file[1],&conta_utenti);
             puts("caricamento da file utenti andato a buon fine!");
            }
 
@@ -290,7 +291,7 @@ int main()
             puts("Memoria insufficiente,allocare piu' memoria per la capacita' prestiti!");
            }
            else {
-            carica_database_prestiti(ptr_prestiti, dim_file[2],conta_prestiti);
+            carica_database_prestiti(ptr_prestiti, dim_file[2],&conta_prestiti);
             puts("caricamento da file prestiti andato a buon fine!");
            }
            
@@ -1633,7 +1634,7 @@ int lettore_dimensione_file(const char *nome_file)
     return i;
 }
 
-void carica_database_libri(libro *ptr, int dim_file,int n) // n è il numero di elementi gia salvati sul puntatore
+void carica_database_libri(libro *ptr, int dim_file,int* ctr_libri) // n è il numero di elementi gia salvati sul puntatore
 {
     FILE *fp;
     size_t flag;
@@ -1646,7 +1647,7 @@ void carica_database_libri(libro *ptr, int dim_file,int n) // n è il numero di 
     }
 
     fseek(fp, sizeof(int), SEEK_SET);  // skippo il primo numero intero
-    flag = fread((ptr+n), sizeof(libro), dim_file, fp);
+    flag = fread((ptr+(*ctr_libri)), sizeof(libro), dim_file, fp);   
 
     if (flag != dim_file)
     { // controllo lettura da file
@@ -1654,11 +1655,13 @@ void carica_database_libri(libro *ptr, int dim_file,int n) // n è il numero di 
         fclose(fp);
         return;
     }
+    
+    *ctr_libri += dim_file;  //incremento il contatore degli elementi presenti nell array
 
     fclose(fp);
 }
 
-void carica_database_utenti(utente *ptr, int dim_file,int n)
+void carica_database_utenti(utente *ptr, int dim_file,int* ctr_utenti)
 {
     FILE *fp;
     size_t flag;
@@ -1671,7 +1674,7 @@ void carica_database_utenti(utente *ptr, int dim_file,int n)
     }
 
     fseek(fp, sizeof(int), SEEK_SET);
-    flag = fread((ptr+n), sizeof(utente), dim_file, fp);
+    flag = fread((ptr+(*ctr_utenti)), sizeof(utente), dim_file, fp);
 
     if (flag != dim_file)
     { // controllo lettura da file
@@ -1680,10 +1683,13 @@ void carica_database_utenti(utente *ptr, int dim_file,int n)
         return;
     }
 
+    *ctr_utenti += dim_file;     //incremento il contatore degli elementi presenti nell array
+
+
     fclose(fp);
 }
 
-void carica_database_prestiti(prestito *ptr,int dim_file,int n)
+void carica_database_prestiti(prestito *ptr,int dim_file,int* ctr_prestiti)
 {
     FILE *fp;
     size_t flag;
@@ -1696,7 +1702,7 @@ void carica_database_prestiti(prestito *ptr,int dim_file,int n)
     }
 
     fseek(fp, sizeof(int), SEEK_SET);
-    flag = fread((ptr+n), sizeof(prestito), dim_file, fp);
+    flag = fread((ptr+(*ctr_prestiti)), sizeof(prestito), dim_file, fp);
 
     if (flag != dim_file)
     { // controllo lettura da file
@@ -1704,6 +1710,9 @@ void carica_database_prestiti(prestito *ptr,int dim_file,int n)
         fclose(fp);
         return;
     }
+
+    *ctr_prestiti += dim_file;   //incremento il contatore degli elementi presenti nell array
+
 
     fclose(fp);
 }
