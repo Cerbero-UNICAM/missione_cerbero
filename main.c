@@ -275,6 +275,7 @@ int main()
            }
            else {
              carica_database_libri(ptr_libri, dim_file[0],ctr_libri);
+             puts("caricamento da file libri andato a buon fine!");
            }
 
            if ((dim_file[1] + conta_utenti) > caputenti){
@@ -282,6 +283,7 @@ int main()
            }
            else {
             carica_database_utenti(ptr_utenti, dim_file[1],conta_utenti);
+            puts("caricamento da file utenti andato a buon fine!");
            }
 
             if ((dim_file[2] + conta_prestiti) > capprestiti){
@@ -289,7 +291,9 @@ int main()
            }
            else {
             carica_database_prestiti(ptr_prestiti, dim_file[2],conta_prestiti);
+            puts("caricamento da file prestiti andato a buon fine!");
            }
+           
 
             break;
 
