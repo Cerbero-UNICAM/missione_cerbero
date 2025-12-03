@@ -277,14 +277,14 @@ int main()
              carica_database_libri(ptr_libri, dim_file[0],ctr_libri);
            }
 
-           if ((dim_file[1] + conta_utenti) > capprestiti){
+           if ((dim_file[1] + conta_utenti) > caputenti){
             puts("Memoria insufficiente,allocare piu' memoria per la capacita' utenti!");
            }
            else {
             carica_database_utenti(ptr_utenti, dim_file[1],conta_utenti);
            }
 
-            if ((dim_file[1] + conta_utenti) > capprestiti){
+            if ((dim_file[2] + conta_prestiti) > capprestiti){
             puts("Memoria insufficiente,allocare piu' memoria per la capacita' prestiti!");
            }
            else {
