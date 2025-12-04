@@ -63,9 +63,9 @@ void salva_libri_binario(libro *ptr_libri, int numero_libri);
 void salva_utenti_binario(utente *ptr_libri, int numero_utenti);
 void salva_prestiti_binario(prestito *ptr_libri, int numero_prestiti);
 int lettore_dimensione_file(const char *nome_file);
-void carica_database_libri(libro *ptr, int dim_file,int* ctr_libri);
-void carica_database_utenti(utente *ptr, int dim_file,int* ctr_utenti);
-void carica_database_prestiti(prestito *ptr, int dim_file,int* ctr_prestiti);
+void carica_database_libri(libro *ptr, int cap_libri,int* ctr_libri);
+void carica_database_utenti(utente *ptr, int cap_utenti,int* ctr_utenti);
+void carica_database_prestiti(prestito *ptr, int cap_prestiti,int* ctr_prestiti);
 void stampa_catalogo_file(libro *ptr, int n);
 void esporta_report_prestiti(libro *ptr_libri, int conta_libri, utente *ptr_utenti, int conta_utenti, prestito *ptr_prestiti, int conta_prestiti);
 
@@ -260,42 +260,9 @@ int main()
 
         case 17:
             printf("\n--- Carica database da file binario ---\n");
-            dim_file[0] = lettore_dimensione_file("libri.dat");
-            dim_file[1] = lettore_dimensione_file("utenti.dat");
-            dim_file[2] = lettore_dimensione_file("prestiti.dat");
-           
-            for (int k = 0; k < 3; k++)
-            { // se un file non è stato aperto correttamente esco dal case
-                if (dim_file[k] == -1)
-                puts("apertura file non riuscita");
-                break;
-            }
-
-           if ((dim_file[0] + ctr_libri) > caplibri){
-            puts("Memoria insufficiente,allocare piu' memoria per la capacita' libri!");
-           }
-           else {
-             carica_database_libri(ptr_libri, dim_file[0],&ctr_libri);
-             puts("caricamento da file libri andato a buon fine!");
-           }
-
-           if ((dim_file[1] + conta_utenti) > caputenti){
-            puts("Memoria insufficiente,allocare piu' memoria per la capacita' utenti!");
-           }
-           else {
-            carica_database_utenti(ptr_utenti, dim_file[1],&conta_utenti);
-            puts("caricamento da file utenti andato a buon fine!");
-           }
-
-            if ((dim_file[2] + conta_prestiti) > capprestiti){
-            puts("Memoria insufficiente,allocare piu' memoria per la capacita' prestiti!");
-           }
-           else {
-            carica_database_prestiti(ptr_prestiti, dim_file[2],&conta_prestiti);
-            puts("caricamento da file prestiti andato a buon fine!");
-           }
-           
-
+           carica_database_libri(ptr_libri,caplibri,&ctr_libri);
+           carica_database_utenti(ptr_utenti,caputenti,&conta_utenti);
+           carica_database_prestiti(ptr_prestiti,capprestiti,&conta_prestiti);
             break;
 
         case 18:
@@ -1634,10 +1601,17 @@ int lettore_dimensione_file(const char *nome_file)
     return i;
 }
 
-void carica_database_libri(libro *ptr, int dim_file,int* ctr_libri) // n è il numero di elementi gia salvati sul puntatore
+void carica_database_libri(libro *ptr,int cap_libri,int* ctr_libri) // n è il numero di elementi gia salvati sul puntatore
 {
     FILE *fp;
     size_t flag;
+    int dim_file;
+
+    dim_file = lettore_dimensione_file("libri.dat"); //leggo la grandezza del file e verifico che ci sia spazio sufficiente per salvare sul puntatore
+    if ((dim_file + (*ctr_libri)) > cap_libri){
+            puts("Memoria insufficiente,allocare piu' memoria per la capacita' libri!");
+            return;
+        }
 
     fp = fopen("libri.dat", "rb");
     if (fp == NULL)
@@ -1661,10 +1635,17 @@ void carica_database_libri(libro *ptr, int dim_file,int* ctr_libri) // n è il n
     fclose(fp);
 }
 
-void carica_database_utenti(utente *ptr, int dim_file,int* ctr_utenti)
+void carica_database_utenti(utente *ptr, int cap_utenti,int* ctr_utenti)
 {
     FILE *fp;
     size_t flag;
+    int dim_file;
+
+    dim_file = lettore_dimensione_file("utenti.dat");
+    if ((dim_file + (*ctr_utenti)) > cap_utenti){
+            puts("Memoria insufficiente,allocare piu' memoria per la capacita' utenti!");
+            return;
+           }
 
     fp = fopen("utenti.dat", "rb");
     if (fp == NULL)
@@ -1689,10 +1670,17 @@ void carica_database_utenti(utente *ptr, int dim_file,int* ctr_utenti)
     fclose(fp);
 }
 
-void carica_database_prestiti(prestito *ptr,int dim_file,int* ctr_prestiti)
+void carica_database_prestiti(prestito *ptr,int cap_prestiti,int* ctr_prestiti)
 {
     FILE *fp;
     size_t flag;
+    int dim_file;
+
+    dim_file = lettore_dimensione_file("prestiti.dat");
+    if ((dim_file + (*ctr_prestiti)) > cap_prestiti){
+            puts("Memoria insufficiente,allocare piu' memoria per la capacita' prestiti!");
+            return;
+        }
 
     fp = fopen("prestiti.dat", "rb");
     if (fp == NULL)
