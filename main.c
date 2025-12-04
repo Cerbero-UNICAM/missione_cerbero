@@ -1575,6 +1575,8 @@ void stampa_catalogo_file(libro *ptr, int n)
     puts("File scritto correttamente");
 }
 
+// 17 - Carico database libri
+
 int lettore_dimensione_file(const char *nome_file)
 {
     FILE *fp;

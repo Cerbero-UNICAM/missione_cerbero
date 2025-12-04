@@ -17,18 +17,22 @@
 1. FRONTESPIZIO
 2. INDICE
 3. INTRODUZIONE
-4. ANALISI DEL PROBLEMA
-    4.1 Caso di Studio
-    4.2 Requisiti Funzionali Dettagliati
+4. ANALISI DEL PROBLEMA\
+    4.1 Caso di Studio\
+    4.2 Requisiti Funzionali Dettagliati\
     4.3 Requisiti Non Funzionali
 5. PROGETTAZIONE
-    5.1 Strutture Dati
-    5.2 Architettura del Sistema
-    5.3 Gestione della Memoria
+    5.1 Strutture Dati\
+    5.2 Architettura del Sistema\
+    5.3 Gestione della Memoria\
     5.4 Gestione dei File
-6. IMPLEMENTAZIONE
+6. IMPLEMENTAZIONE\
     6.1 Funzioni Principali
-7. TESTING
+7. TESTING\
+    7.1 Casi di test\
+    7.2 Test file 
+8. MANUALE UTENTE 
+9.  CONCLUSIONI
 
 ***
 
@@ -45,7 +49,7 @@ Il progetto consiste nello sviluppo di un'applicazione in linguaggio C finalizza
 
 ### 4.1 Caso di Studio
 
-La necessità operativa è gestire il catalogo e i prestiti per una **Biblioteca Comunale**. Il sistema deve tracciare con precisione i libri disponibili, gli utenti registrati e lo storico completo di tutte le transazioni di prestito.
+La necessità operativa è gestire il catalogo e i prestiti per una **Biblioteca Comunale**. Il sistema deve tracciare con precisione i libri disponibili, gli utenti registrati e lo storico completo di tutte le transazioni di prestito. Inoltre deve garantire continuità tra due accessi isolati al programma, di modo che di volta in volta il database possa venire aggiornato ed essere sempre disponibile. 
 
 ### 4.2 Requisiti Funzionali Dettagliati
 
@@ -60,7 +64,7 @@ Il sistema è suddiviso in cinque aree principali, ciascuna con specifiche funzi
 | **Inserimento Nuovo Libro (1)** | Richiede tutti i dati del libro. Verifica che l'**ISBN non sia duplicato** (deve essere univoco). Valida l'**anno di pubblicazione** nel range 1800-2025 e il **numero di copie** sia maggiore di 0. |
 | **Visualizzazione Catalogo (2)** | Stampa l'elenco completo dei libri in formato **tabellare**, mostrando ISBN, titolo, autore, anno, copie disponibili e genere. |
 | **Ricerca per ISBN (3)** | Richiede l'ISBN da cercare e visualizza i dettagli completi del libro se trovato; altrimenti, fornisce un messaggio di errore. |
-| **Ricerca per Autore (4)** | Richiede il nome dell'autore e visualizza **tutti i libri** di quell'autore. Il confronto deve utilizzare `strcmp()` (case-sensitive). |
+| **Ricerca per Autore (4)** | Richiede il nome dell'autore e visualizza **tutti i libri** di quell'autore. Il confronto deve utilizzare `strcmp()` (vengono effettuati appositi controlli per evitare errori qualora alcuni in alcuni nomi compaiano lettere in maiuscolo e in altri no). |
 | **Libri Disponibili (5)** | Visualizza solo i libri con **`numero_copie > 0`**. L'elenco deve essere **ordinato per titolo** (ordine alfabetico crescente). |
 
 ---
@@ -79,7 +83,7 @@ Il sistema è suddiviso in cinque aree principali, ciascuna con specifiche funzi
 
 | Requisito | Dettaglio Funzionale |
 | :--- | :--- |
-| **Registrazione Prestito (9)** | Richiede ISBN del libro e codice utente. **Verifica** che il libro esista e abbia copie disponibili (`numero_copie > 0`) e che l'utente esista. **Decrementa** automaticamente `numero_copie`. Genera un `codice_prestito` univoco (incrementale) e calcola automaticamente la **`data_restituzione_prevista`** (30 giorni dopo la `data_prestito`). Imposta `restituito = 0`. |
+| **Registrazione Prestito (9)** | Richiede ISBN del libro e codice utente. **Verifica** che il libro esista e abbia copie disponibili (`numero_copie > 0`) e che l'utente esista. **Decrementa** automaticamente `numero_copie`. Genera un `codice_prestito` univoco (incrementale) e calcola automaticamente la **`data_restituzione_prevista`** (30 giorni dopo la `data_prestito`). Imposta `restituito = 0`, al fine di segnalare che il prestito inizia ad essere attivo. |
 | **Registrazione Restituzione (10)** | Richiede il `codice_prestito`. Verifica che il prestito esista e non sia già restituito. Imposta **`restituito = 1`** e **incrementa** automaticamente `numero_copie` del libro. |
 | **Prestiti Attivi (11)** | Mostra tutti i prestiti con **`restituito = 0`**. Visualizza codice prestito, titolo libro, nome utente e le date di prestito/restituzione prevista. |
 | **Storico Utente (12)** | Richiede il codice utente. Mostra **tutti i prestiti** (attivi e passati) di quell'utente e indica chiaramente quali sono stati restituiti e quali no. |
@@ -90,8 +94,8 @@ Il sistema è suddiviso in cinque aree principali, ciascuna con specifiche funzi
 
 | Requisito | Dettaglio Funzionale |
 | :--- | :--- |
-| **Statistiche Generali (13)** | Calcola e mostra: numero totale di libri nel catalogo, numero totale di copie disponibili, numero totale di utenti registrati, numero totale di prestiti effettuati, numero di prestiti attualmente attivi e il **libro più prestato** (nello storico). |
-| **Libri per Genere (14)** | Visualizza il **conteggio dei libri** suddiviso per genere. |
+| **Statistiche Generali (13)** | Calcola e mostra: numero totale di libri nel catalogo, numero totale di copie disponibili, numero totale di utenti registrati, numero totale di prestiti effettuati, numero di prestiti attualmente attivi e il **libro più prestato** (in accordo con lo storico). |
+| **Libri per Genere (14)** | Visualizza il **conteggio dei libri** suddiviso per genere (Attenzione: per gestire questa situazione è stata effettuata una scelta funzionale; i possibili generi di appartenenza dei libri sono stati ridotti a 6 al fine di rendere più fluide le operazioni). |
 | **Top 5 Libri (15)** | Visualizza i **5 libri** con il maggior numero di prestiti. Il formato include Posizione, Titolo, Autore e Numero di prestiti. |
 
 ---
@@ -101,7 +105,7 @@ Il sistema è suddiviso in cinque aree principali, ciascuna con specifiche funzi
 | Requisito | Dettaglio Funzionale |
 | :--- | :--- |
 | **Salvataggio Binario (16)** | Salva i dati su tre file binari separati (`libri.dat`, `utenti.dat`, `prestiti.dat`). Il formato per ogni file è: `[numero_elementi (int)]` seguito dall'array di strutture. |
-| **Caricamento Binario (17)** | Legge i dati dai file binari, leggendo prima il numero di elementi per **allocare dinamicamente** l'array della dimensione corretta. Deve gestire correttamente l'assenza dei file. |
+| **Caricamento Binario (17)** | Estrae i dati dai file binari, leggendo prima il numero di elementi per sapere da che punto iniziare a scrivere sul dataabse aperto nel main (quello su cui sta lavorando l'utente). In questo modo, una volta caricato quanto salvato nei file, si dispone del completo bilancio di prestiti, utenti e dei libri presenti.  Deve gestire correttamente l'assenza dei file. |
 | **Esporta Catalogo Testo (18)** | Crea un file `catalogo.txt` leggibile, scrivendo tutti i libri in formato testuale, uno per riga. |
 | **Esporta Report Prestiti Testo (19)** | Crea un file `report_prestiti.txt` scrivendo solo i **prestiti attivi** in formato leggibile. Deve includere codice prestito, ISBN libro, titolo libro, codice utente, nome utente e le date. |
 | **Esci (20)** | Prima di uscire, **chiede se salvare** i dati su file binario e **libera tutta la memoria** allocata dinamicamente. |
@@ -111,10 +115,9 @@ Il sistema è suddiviso in cinque aree principali, ciascuna con specifiche funzi
 * **Allocazione Dinamica**: Tutti gli array sono allocati dinamicamente con `malloc()` e la capacità massima è definita dall'utente all'avvio.
 * **Robustezza e Gestione Errori**: Il codice include il controllo del ritorno di `malloc()` e `fopen()`. Il sistema deve informare l'utente in caso di array pieni.
 * **Validazione Input**: Controlli rigorosi sono implementati per ISBN, Anno (1800-2025), Numero copie (>0), Email (presenza di '@') e Date (formato "gg/mm/aaaa").
+* **Modularità**: Ad ogni scelta del menù corrisponde la chiamata di una sola funzione affinchè il codice sia ben leggibile e fruibile, oltre che manutenibile. Allo stesso modo, le funzioni principali, laddove necessario, sono state anch'esse modularizzate al fine di renderne la comprensione della logica ed eventuali modifiche quanto più agevoli possibili. 
 
-## 5. PROGETTAZIONE
 
-### 5.1 Strutture Dati
 
 ## 5. PROGETTAZIONE
 
@@ -462,7 +465,7 @@ Durante lo sviluppo sono state affrontate diverse sfide tecniche:
 
 ### Possibili Miglioramenti Futuri
 Per versioni future del software, si ipotizzano le seguenti implementazioni:
-* **Funzionalità di Cancellazione**: Aggiungere la possibilità di rimuovere libri o utenti obsoleti.
+* **Funzionalità di Cancellazione**: Aggiungere la possibilità di rimuovere libri o utenti obsoleti (attualmente non richiesto dalle specifiche).
 * **Modifica Dati**: Permettere la correzione di dati inseriti erroneamente (es. correggere un titolo o un cognome).
 * **Ordinamento Avanzato**: Sostituire l'algoritmo di ordinamento attuale (Bubble Sort) con algoritmi più efficienti come Quicksort per gestire grandi volumi di dati.
 
