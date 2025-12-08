@@ -1554,7 +1554,7 @@ void salva_utenti_binario(utente *ptr_utenti, int numero_utenti)
 void stampa_catalogo_file(libro *ptr, int n)
 {
     FILE *fp_catalogo; // apro o creo il file di testo in scrittura
-    fp_catalogo = fopen("Catalgo_libri.txt", "w");
+    fp_catalogo = fopen("Catalogo_libri.txt", "w");
 
     if (fp_catalogo == NULL)
     { // verifica corretta apertura file
