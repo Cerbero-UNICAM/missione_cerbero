@@ -1062,7 +1062,6 @@ void visualizza_prestiti_attivi(libro *ptr_libri, int conta_libri, utente *ptr_u
             salva_nomeUtente(ptr_prestiti[i].codice_utente, ptr_utenti, conta_utenti, nome_utente);
 
             // Stampa formattata
-            printf("----------------------------------\n");
             printf("CODICE PRESTITO: %d\n", ptr_prestiti[i].codice_prestito);
             printf("LIBRO:           %s\n", titolo);
             printf("UTENTE:          %s\n", nome_utente);
@@ -1173,7 +1172,6 @@ int stampa_storico_utente(int cod, libro *ptr_libri, int conta_libri, utente *pt
             salva_nomeUtente(ptr_prestiti[i].codice_utente, ptr_utenti, conta_utenti, nome_utente);
 
             // Stampa formattata in stile Scelta 11
-            printf("----------------------------------\n");
             printf("CODICE PRESTITO: %d\n", ptr_prestiti[i].codice_prestito);
             printf("LIBRO:           %s\n", titolo);
             printf("UTENTE:          %s\n", nome_utente);
