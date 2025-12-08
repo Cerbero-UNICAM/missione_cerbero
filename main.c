@@ -1735,7 +1735,7 @@ void esporta_report_prestiti(libro *ptr_libri, int conta_libri, utente *ptr_uten
 
             // Stampa formattata
             fprintf(fp, "CODICE PRESTITO: %d\n", ptr_prestiti[i].codice_prestito);
-            fprintf(fp, "ISBN LIBRO: %d\n", ptr_prestiti[i].codice_ISBN_libro);
+            fprintf(fp, "ISBN LIBRO: %s\n", ptr_prestiti[i].codice_ISBN_libro);
             fprintf(fp, "LIBRO:           %s\n", titolo);
             fprintf(fp, "CODICE UTENTE: %d\n", ptr_prestiti[i].codice_utente);
             fprintf(fp, "NOME UTENTE:          %s\n", nome_utente);
