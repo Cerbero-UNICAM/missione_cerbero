@@ -1755,6 +1755,6 @@ void esporta_report_prestiti(libro *ptr_libri, int conta_libri, utente *ptr_uten
     }
 
     return;
-
-    // FINE SEZIONE E
 }
+
+// FINE SEZIONE E
