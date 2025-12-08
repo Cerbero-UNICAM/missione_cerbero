@@ -284,7 +284,6 @@ int main()
             break;
         }
 
-        // per fare felice il puffetto
         if (scelta != 20)
         {
             printf("\nPremi INVIO per continuare...");
