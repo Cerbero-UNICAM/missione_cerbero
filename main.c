@@ -63,9 +63,9 @@ void salva_libri_binario(libro *ptr_libri, int numero_libri);
 void salva_utenti_binario(utente *ptr_libri, int numero_utenti);
 void salva_prestiti_binario(prestito *ptr_libri, int numero_prestiti);
 int lettore_dimensione_file(const char *nome_file);
-void carica_database_libri(libro *ptr, int cap_libri,int* ctr_libri);
-void carica_database_utenti(utente *ptr, int cap_utenti,int* ctr_utenti);
-void carica_database_prestiti(prestito *ptr, int cap_prestiti,int* ctr_prestiti);
+void carica_database_libri(libro *ptr, int cap_libri, int *ctr_libri);
+void carica_database_utenti(utente *ptr, int cap_utenti, int *ctr_utenti);
+void carica_database_prestiti(prestito *ptr, int cap_prestiti, int *ctr_prestiti);
 void stampa_catalogo_file(libro *ptr, int n);
 void esporta_report_prestiti(libro *ptr_libri, int conta_libri, utente *ptr_utenti, int conta_utenti, prestito *ptr_prestiti, int conta_prestiti);
 
@@ -90,7 +90,7 @@ int main()
     scanf("%d", &capprestiti);
     printf("Database inizializzato correttamente!\n\n");
 
-    //inizializzazione dei 3 array con relativi controlli
+    // inizializzazione dei 3 array con relativi controlli
     libro *ptr_libri = (libro *)malloc(caplibri * sizeof(libro));
     if (ptr_libri == NULL)
     {
@@ -260,9 +260,9 @@ int main()
 
         case 17:
             printf("\n--- Carica database da file binario ---\n");
-           carica_database_libri(ptr_libri,caplibri,&ctr_libri);
-           carica_database_utenti(ptr_utenti,caputenti,&conta_utenti);
-           carica_database_prestiti(ptr_prestiti,capprestiti,&conta_prestiti);
+            carica_database_libri(ptr_libri, caplibri, &ctr_libri);
+            carica_database_utenti(ptr_utenti, caputenti, &conta_utenti);
+            carica_database_prestiti(ptr_prestiti, capprestiti, &conta_prestiti);
             break;
 
         case 18:
@@ -327,7 +327,7 @@ void inserisci_libro(libro *ptr, int cap_libri, int *n)
         return;
     }
     while ((c = getchar()) != '\n')
-    ; // pulire stdin
+        ; // pulire stdin
 
     for (int i = 0; i < k; i++)
     {
@@ -339,8 +339,8 @@ void inserisci_libro(libro *ptr, int cap_libri, int *n)
     }
 
     printf("Titolo: ");
-    fgets((ptr + k)->titolo, sizeof((ptr + k)->titolo), stdin); // input da tastiera salvato nella prima struct libera 
-    (ptr + k)->titolo[strcspn((ptr + k)->titolo, "\n")] = '\0'; // sostituisce newline con il carattere terminatore 
+    fgets((ptr + k)->titolo, sizeof((ptr + k)->titolo), stdin); // input da tastiera salvato nella prima struct libera
+    (ptr + k)->titolo[strcspn((ptr + k)->titolo, "\n")] = '\0'; // sostituisce newline con il carattere terminatore
 
     printf("autore: ");
     fgets((ptr + k)->autore, sizeof((ptr + k)->autore), stdin);
@@ -348,7 +348,7 @@ void inserisci_libro(libro *ptr, int cap_libri, int *n)
 
     printf("anno di pubblicazione: ");
     scanf("%d", &(ptr + k)->anno_pubblicazione);
-    while ((ptr + k)->anno_pubblicazione < 1800 || (ptr + k)->anno_pubblicazione > 2025) //verifica sull'anno inserito
+    while ((ptr + k)->anno_pubblicazione < 1800 || (ptr + k)->anno_pubblicazione > 2025) // verifica sull'anno inserito
     {
         printf("anno non valido, inserire un anno tra il 1800 e il 2025: ");
         scanf("%d", &((ptr + k)->anno_pubblicazione));
@@ -402,7 +402,7 @@ void inserisci_libro(libro *ptr, int cap_libri, int *n)
 
 void cerca_libro_ISBN(libro *ptr, int n)
 {
-    char temp[18]; 
+    char temp[18];
 
     printf("inserisci il codice ISBN da cercare(XXX-X-XXXX-XXXX-X): ");
     scanf("%s", temp);
@@ -445,7 +445,7 @@ void stampa_lista_libri(libro *ptr, int n)
     }
 }
 
-// 4 - cerca libri per autore 
+// 4 - cerca libri per autore
 void cerca_libro_autore(libro *ptr, int n)
 {
     char str_temp0[51]; // immagazzino la stringa da ricercare
@@ -453,11 +453,11 @@ void cerca_libro_autore(libro *ptr, int n)
     puts("inserisci il nome dell autore da ricercare");
     scanf("%s", str_temp0);
     printf("i libri di %s sono: ", str_temp0);
-    stringa_maiuscolo(str_temp0); // normalizzo in maiuscolo nome autore inserito dall'utente 
+    stringa_maiuscolo(str_temp0); // normalizzo in maiuscolo nome autore inserito dall'utente
     for (int i = 0; i < n; i++)
     {
         strcpy(str_temp1, (ptr + i)->autore); // copia autore in temp
-        stringa_maiuscolo(str_temp1);         // converto la copia in maiuscolo in modo da avere confronti coerenti 
+        stringa_maiuscolo(str_temp1);         // converto la copia in maiuscolo in modo da avere confronti coerenti
         if (strcmp(str_temp1, str_temp0) == 0)
         { // confronto le due stringhe per tutti i libri
             printf("%s\n", (ptr + i)->titolo);
@@ -607,16 +607,16 @@ void inserisci_utente(utente *ptr, int *ptr_num_utenti, int *ptr_capacità)
         while ((c = getchar()) != '\n')
             ;
 
-        // controllo che la data inserita sia valida 
+        // controllo che la data inserita sia valida
         if (is_data(new_data_iscrizione))
         {
-            break; // termina il ciclo esterno perchè la data inserita è valida 
+            break; // termina il ciclo esterno perchè la data inserita è valida
         }
         else
         {
             printf("Formato data non valido. Inserire gg/mm/aaaa corretto.\n");
         }
-    } while (1); 
+    } while (1);
 
     // SALVATAGGIO DATI NELLA STRUTTURA
     int k = *ptr_num_utenti;
@@ -626,7 +626,7 @@ void inserisci_utente(utente *ptr, int *ptr_num_utenti, int *ptr_capacità)
     strcpy(ptr[k].email, new_email);
     strcpy(ptr[k].data_iscrizione, new_data_iscrizione);
 
-    *ptr_num_utenti += 1; // aggiorno contatore per successiva registrazione un utente 
+    *ptr_num_utenti += 1; // aggiorno contatore per successiva registrazione un utente
 
     printf("\nRegistrazione del nuovo utente avvenuta con successo! Codice: %d\n", new_codice_utente);
 }
@@ -669,7 +669,7 @@ void cerca_utente(utente *ptr, int numero_utenti)
             printf("%-15s %-50s %-50s %-80s %-20s\n", "Codice utente", "Nome", "Cognome", "Email", "Data di iscrizione");
             printf("%d %-50s %-50s %-80s %-10s\n", ptr[i].codice_utente, ptr[i].nome, ptr[i].cognome, ptr[i].email, ptr[i].data_iscrizione);
             trovato = 1; // confermo la corrispondenza, dunque aggiorno valore trovato
-            break; // per univocità codice utente posso direttamente concludere la ricerca; NON può esserci altro utente a cui è associato codice inserito 
+            break;       // per univocità codice utente posso direttamente concludere la ricerca; NON può esserci altro utente a cui è associato codice inserito
         }
     }
 
@@ -908,7 +908,7 @@ int is_data(char *data)
     {
         if (!isdigit(data[posizioni_cifre[i]]))
         {
-            return 0; // non vi sono cifre dove dovrebbero esserci 
+            return 0; // non vi sono cifre dove dovrebbero esserci
         }
     }
 
@@ -939,7 +939,7 @@ int is_data(char *data)
 
     // Controllo giorno massimo
     if (giorno > giorni_mese[mese - 1])
-        return 0; 
+        return 0;
 
     return 1;
 }
@@ -963,7 +963,7 @@ void calcoladata(char *data)
     // aggiungo 30 gg
     giorno += 30;
 
-    // aggiusto data 
+    // aggiusto data
     while (giorno > giorni_mese[mese - 1]) // finché ho troppi giorni per il mese corrente...
     {
         giorno -= giorni_mese[mese - 1]; // gli sottraggo i giorni del mese corrente
@@ -974,11 +974,10 @@ void calcoladata(char *data)
             mese = 1; // torno a gennaio
             anno++;   // e passo all'anno successivo
         }
-
     }
 
     // sostituisco stringa data
-    
+
     sprintf(data, "%02d/%02d/%04d", giorno, mese, anno);
 }
 
@@ -1414,7 +1413,6 @@ void libri_più_prestati(libro *ptr_libri, int numero_libri, prestito *ptr_prest
     free(num_prestiti_per_libro);
 }
 
-
 // FINE SEZIONE D
 
 // INIZIO SEZIONE E
@@ -1600,17 +1598,18 @@ int lettore_dimensione_file(const char *nome_file)
     return i;
 }
 
-void carica_database_libri(libro *ptr,int cap_libri,int* ctr_libri) // n è il numero di elementi gia salvati sul puntatore
+void carica_database_libri(libro *ptr, int cap_libri, int *ctr_libri) // n è il numero di elementi gia salvati sul puntatore
 {
     FILE *fp;
     size_t flag;
     int dim_file;
 
-    dim_file = lettore_dimensione_file("libri.dat"); //leggo la grandezza del file e verifico che ci sia spazio sufficiente per salvare sul puntatore
-    if ((dim_file + (*ctr_libri)) > cap_libri){
-            puts("Memoria insufficiente,allocare piu' memoria per la capacita' libri!");
-            return;
-        }
+    dim_file = lettore_dimensione_file("libri.dat"); // leggo la grandezza del file e verifico che ci sia spazio sufficiente per salvare sul puntatore
+    if ((dim_file + (*ctr_libri)) > cap_libri)
+    {
+        puts("Memoria insufficiente,allocare piu' memoria per la capacita' libri!");
+        return;
+    }
 
     fp = fopen("libri.dat", "rb");
     if (fp == NULL)
@@ -1619,8 +1618,8 @@ void carica_database_libri(libro *ptr,int cap_libri,int* ctr_libri) // n è il n
         return;
     }
 
-    fseek(fp, sizeof(int), SEEK_SET);  // skippo il primo numero intero
-    flag = fread((ptr+(*ctr_libri)), sizeof(libro), dim_file, fp);   
+    fseek(fp, sizeof(int), SEEK_SET); // skippo il primo numero intero
+    flag = fread((ptr + (*ctr_libri)), sizeof(libro), dim_file, fp);
 
     if (flag != dim_file)
     { // controllo lettura da file
@@ -1628,23 +1627,24 @@ void carica_database_libri(libro *ptr,int cap_libri,int* ctr_libri) // n è il n
         fclose(fp);
         return;
     }
-    
-    *ctr_libri += dim_file;  //incremento il contatore degli elementi presenti nell array
+
+    *ctr_libri += dim_file; // incremento il contatore degli elementi presenti nell array
 
     fclose(fp);
 }
 
-void carica_database_utenti(utente *ptr, int cap_utenti,int* ctr_utenti)
+void carica_database_utenti(utente *ptr, int cap_utenti, int *ctr_utenti)
 {
     FILE *fp;
     size_t flag;
     int dim_file;
 
     dim_file = lettore_dimensione_file("utenti.dat");
-    if ((dim_file + (*ctr_utenti)) > cap_utenti){
-            puts("Memoria insufficiente,allocare piu' memoria per la capacita' utenti!");
-            return;
-           }
+    if ((dim_file + (*ctr_utenti)) > cap_utenti)
+    {
+        puts("Memoria insufficiente,allocare piu' memoria per la capacita' utenti!");
+        return;
+    }
 
     fp = fopen("utenti.dat", "rb");
     if (fp == NULL)
@@ -1654,7 +1654,7 @@ void carica_database_utenti(utente *ptr, int cap_utenti,int* ctr_utenti)
     }
 
     fseek(fp, sizeof(int), SEEK_SET);
-    flag = fread((ptr+(*ctr_utenti)), sizeof(utente), dim_file, fp);
+    flag = fread((ptr + (*ctr_utenti)), sizeof(utente), dim_file, fp);
 
     if (flag != dim_file)
     { // controllo lettura da file
@@ -1663,23 +1663,23 @@ void carica_database_utenti(utente *ptr, int cap_utenti,int* ctr_utenti)
         return;
     }
 
-    *ctr_utenti += dim_file;     //incremento il contatore degli elementi presenti nell array
-
+    *ctr_utenti += dim_file; // incremento il contatore degli elementi presenti nell array
 
     fclose(fp);
 }
 
-void carica_database_prestiti(prestito *ptr,int cap_prestiti,int* ctr_prestiti)
+void carica_database_prestiti(prestito *ptr, int cap_prestiti, int *ctr_prestiti)
 {
     FILE *fp;
     size_t flag;
     int dim_file;
 
     dim_file = lettore_dimensione_file("prestiti.dat");
-    if ((dim_file + (*ctr_prestiti)) > cap_prestiti){
-            puts("Memoria insufficiente,allocare piu' memoria per la capacita' prestiti!");
-            return;
-        }
+    if ((dim_file + (*ctr_prestiti)) > cap_prestiti)
+    {
+        puts("Memoria insufficiente,allocare piu' memoria per la capacita' prestiti!");
+        return;
+    }
 
     fp = fopen("prestiti.dat", "rb");
     if (fp == NULL)
@@ -1689,7 +1689,7 @@ void carica_database_prestiti(prestito *ptr,int cap_prestiti,int* ctr_prestiti)
     }
 
     fseek(fp, sizeof(int), SEEK_SET);
-    flag = fread((ptr+(*ctr_prestiti)), sizeof(prestito), dim_file, fp);
+    flag = fread((ptr + (*ctr_prestiti)), sizeof(prestito), dim_file, fp);
 
     if (flag != dim_file)
     { // controllo lettura da file
@@ -1698,8 +1698,7 @@ void carica_database_prestiti(prestito *ptr,int cap_prestiti,int* ctr_prestiti)
         return;
     }
 
-    *ctr_prestiti += dim_file;   //incremento il contatore degli elementi presenti nell array
-
+    *ctr_prestiti += dim_file; // incremento il contatore degli elementi presenti nell array
 
     fclose(fp);
 }
